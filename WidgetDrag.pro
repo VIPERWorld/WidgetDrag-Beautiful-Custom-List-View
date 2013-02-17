@@ -16,11 +16,17 @@ SOURCES += main.cpp\
         widgetdrag.cpp \
     variablewidget.cpp \
     mylistwidget.cpp \
-    parserengine.cpp
+    parserengine.cpp \
+    qcenteredcell.cpp \
+    checkspinitem.cpp \
+    checkedititem.cpp
 
 HEADERS  += widgetdrag.h \
     variablewidget.h \
     mylistwidget.h \
-    parserengine.h
+    parserengine.h \
+    qcenteredcell.h \
+    checkspinitem.h \
+    checkedititem.h
 
 FORMS    += widgetdrag.ui

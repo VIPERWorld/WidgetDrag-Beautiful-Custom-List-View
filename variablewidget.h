@@ -12,8 +12,12 @@
 #include <QPushButton>
 #include <QTableWidget>
 #include <QHeaderView>
+
 #include <parserengine.h>
 #include <QDebug>
+#include "qcenteredcell.h"
+#include "checkspinitem.h"
+#include "checkedititem.h"
 
 #define BYTTYPE 0
 #define NUMTYPE 1
@@ -103,7 +107,8 @@ public slots:
     void changeLength(int);
     void toggleMatch(bool);
     void changeMatch(QString);
-    void addVectorByte();
+    void addVectorItem(void);
+    void addVectorItem(int);
     void tableCellClicked(int,int);
 };
 
