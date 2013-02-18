@@ -45,7 +45,7 @@ void Widget::addVariable()
     vwList->append(vw);
     QIcon icon = QIcon::fromTheme("edit-undo",QIcon("../WidgetDrag/circle.png"));
     QListWidgetItem *item = new QListWidgetItem(lw);
-    item->setIcon(icon);
+//    item->setIcon(icon);
     lw->addItem(item);
     item->setSizeHint(vw->sizeHint());
     lw->setItemWidget(item,vw);

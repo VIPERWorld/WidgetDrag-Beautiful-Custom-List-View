@@ -15,7 +15,8 @@ public:
     QSpinBox *spin;
     QHBoxLayout *layout;
 signals:
-
+    void lengthToggled(bool);
+    void lengthChanged(int);
     
 public slots:
     

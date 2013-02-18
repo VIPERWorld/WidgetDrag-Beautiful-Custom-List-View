@@ -10,4 +10,7 @@ CheckEditItem::CheckEditItem(QWidget *parent) :
     layout->addWidget(check);
     layout->addWidget(edit);
     setLayout(layout);
+
+    connect(check,SIGNAL(toggled(bool)),this,SIGNAL(matchToggled(bool)));
+    connect(edit,SIGNAL(textChanged(QString)),this,SIGNAL(matchChanged(QString)));
 }

@@ -87,6 +87,9 @@ private:
     QPixmap varlenIconPixmap;
     QPixmap fixlenIconPixmap;
     QPixmap matchIconPixmap;
+    QPixmap moreIconPixmap;
+    QPixmap lessIconPixmap;
+    QPixmap deleteIconPixmap;
 
     int currentType;
 
@@ -110,6 +113,10 @@ public slots:
     void addVectorItem(void);
     void addVectorItem(int);
     void tableCellClicked(int,int);
+    void vectorItemLengthToggled(bool);
+    void vectorItemLengthChanged(int);
+    void vectorItemMatchToggled(bool);
+    void vectorItemMatchChanged(QString);
 };
 
 #endif // VARIABLEWIDGET_H

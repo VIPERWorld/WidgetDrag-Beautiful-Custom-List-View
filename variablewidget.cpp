@@ -10,11 +10,16 @@ VariableWidget::VariableWidget(QWidget *parent) :
     varlenIconPixmap = QPixmap("../WidgetDrag/varlen_icon.png");
     fixlenIconPixmap = QPixmap("../WidgetDrag/fixlen_icon.png");
     matchIconPixmap = QPixmap("../WidgetDrag/match_icon.png");
+           moreIconPixmap = QPixmap("../WidgetDrag/more_icon.png");
+             lessIconPixmap = QPixmap("../WidgetDrag/less_icon.png");
+       deleteIconPixmap = QPixmap("../WidgetDrag/delete_icon.png");
 
     currentType = BYTTYPE;
 
     QIcon typeIcon=byteIconPixmap;
     QIcon lengthIcon=fixlenIconPixmap;
+    QIcon lessIcon = lessIconPixmap;
+    QIcon deleteIcon = deleteIconPixmap;
 
     // Title
     title = new QLabel("variable");
@@ -34,12 +39,17 @@ VariableWidget::VariableWidget(QWidget *parent) :
     matchIndicator->setFixedWidth(20);
     matchIndicator->setFixedHeight(20);
     matchIndicator->setFlat(true);
-    moreButton = new QPushButton("More");
+    moreButton = new QPushButton;
     moreButton->setCheckable(true);
     moreButton->setChecked(true);
-    moreButton->setFixedHeight(30);
-    delButton = new QPushButton("Delete");
-    delButton->setFixedHeight(30);
+    moreButton->setFixedWidth(20);
+    moreButton->setFixedHeight(20);
+    moreButton->setIcon(lessIcon);
+    delButton = new QPushButton;
+    delButton->setFixedWidth(20);
+    delButton->setFixedHeight(20);
+
+    delButton->setIcon(deleteIcon);
     titleLayout = new QHBoxLayout;
 
     titleLayout->addWidget(title);
@@ -48,7 +58,6 @@ VariableWidget::VariableWidget(QWidget *parent) :
     titleLayout->addWidget(matchIndicator);
     titleLayout->addWidget(moreButton);
     titleLayout->addWidget(delButton);
-    //    titleLayout->setGeometry(QRect(0,0,160,20));
 
     // Name
     nameLabel = new QLabel("Name");
@@ -138,8 +147,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     headers.append("X");
     tableWidget->setHorizontalHeaderLabels(headers);
 //    tableWidget->horizontalHeader()->setStretchLastSection(true);
-    tableWidget->setDragDropMode(QAbstractItemView::InternalMove);
-    tableWidget->setAcceptDrops(false);
+
     tableWidget->setColumnWidth(0,80);
     tableWidget->setColumnWidth(1,40);
     tableWidget->setColumnWidth(2,80);
@@ -147,12 +155,6 @@ VariableWidget::VariableWidget(QWidget *parent) :
     tableWidget->setColumnWidth(4,30);
     tableWidget->setColumnWidth(5,30);
     tableWidget->setColumnWidth(6,30);
-
-//    tableWidget->resizeColumnsToContents();
-//    QCenteredCell *cc = new QCenteredCell(tableWidget);
-
-
-//    QCheckBox *lenCheck = new QCheckBox;
 
 addVectorItem(BYTTYPE);
 
@@ -164,11 +166,6 @@ addVectorItem(BYTTYPE);
     tableWidget->horizontalHeader()->setSectionResizeMode(5,QHeaderView::Fixed);
     tableWidget->horizontalHeader()->setSectionResizeMode(6,QHeaderView::Fixed);
 
-
-//    tableWidget->horizontalHeader()->set->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-
-    //tableWidget->setColumnWidth(4,80);
-    //tableWidget->setItem(0, 5, newItem6);
     vectorListLayout = new QHBoxLayout;
     vectorListLayout->addWidget(tableWidget);
 
@@ -223,11 +220,13 @@ void VariableWidget::expanded(bool expand)
     if(expand)
     {
         mainLayout->addLayout(expandedLayout);
+         moreButton->setIcon(QIcon(lessIconPixmap));
         //        mainLayout->addWidget(check);
     }
     else
     {
         mainLayout->removeItem(expandedLayout);
+        moreButton->setIcon(QIcon(moreIconPixmap));
         //        mainLayout->removeWidget(check);
     }
     //    check->setVisible(expand);
@@ -402,6 +401,8 @@ void VariableWidget::addVectorItem(int varType)
 {
     int row = tableWidget->rowCount();
     tableWidget->insertRow(row);
+    CheckSpinItem *csItem=new CheckSpinItem;
+    CheckEditItem *ceItem=new CheckEditItem;
 
 
     QTableWidgetItem *newItem0 = new QTableWidgetItem("variable");
@@ -423,12 +424,17 @@ void VariableWidget::addVectorItem(int varType)
     tableWidget->setItem(row, 1, newItem1);
     newItem1->setFlags(newItem1->flags() ^ Qt::ItemIsEditable);
     tableWidget->setItem(row, 2, newItem2);
-    tableWidget->setCellWidget(row,2,new CheckSpinItem);
+    tableWidget->setCellWidget(row,2,csItem);
     tableWidget->setItem(row, 3, newItem3);
-    tableWidget->setCellWidget(row,3,new CheckEditItem);
+    tableWidget->setCellWidget(row,3,ceItem);
     tableWidget->setItem(row, 4, newItem4);
     tableWidget->setRowHeight(row,50);
         tableWidget->verticalHeader()->setSectionResizeMode(row,QHeaderView::Fixed);
+
+        connect(csItem,SIGNAL(lengthToggled(bool)),this,SLOT(vectorItemLengthToggled(bool)));
+        connect(csItem,SIGNAL(lengthChanged(int)),this,SLOT(vectorItemLengthChanged(int)));
+        connect(ceItem,SIGNAL(matchToggled(bool)),this,SLOT(vectorItemMatchToggled(bool)));
+        connect(ceItem,SIGNAL(matchChanged(QString)),this,SLOT(vectorItemMatchChanged(QString)));
 }
 
 void VariableWidget::addVectorItem()
@@ -470,5 +476,61 @@ void VariableWidget::tableCellClicked(int row, int col)
     if(col==6)
     {
         tableWidget->removeRow(row);
+    }
+}
+
+void VariableWidget::vectorItemLengthToggled(bool fixed)
+{
+    CheckSpinItem *cs_sender = static_cast<CheckSpinItem*>(QObject::sender());
+    for(quint8 i =0;i<tableWidget->rowCount();i++)
+    {
+        CheckSpinItem *cs_match = static_cast<CheckSpinItem*>(tableWidget->cellWidget(i,2));
+        if(cs_sender==cs_match)
+        {
+            // Row identified
+            qDebug() << "Vector item # " << i << "has set fixed length to " << fixed;
+        }
+    }
+}
+
+void VariableWidget::vectorItemLengthChanged(int newLength)
+{
+    CheckSpinItem *cs_sender = static_cast<CheckSpinItem*>(QObject::sender());
+    for(quint8 i =0;i<tableWidget->rowCount();i++)
+    {
+        CheckSpinItem *cs_match = static_cast<CheckSpinItem*>(tableWidget->cellWidget(i,2));
+        if(cs_sender==cs_match)
+        {
+            // Row identified
+            qDebug() << "Vector item # " << i << "has set length to " << newLength;
+        }
+    }
+}
+
+void VariableWidget::vectorItemMatchToggled(bool matched)
+{
+    CheckSpinItem *cs_sender = static_cast<CheckSpinItem*>(QObject::sender());
+    for(quint8 i =0;i<tableWidget->rowCount();i++)
+    {
+        CheckSpinItem *cs_match = static_cast<CheckSpinItem*>(tableWidget->cellWidget(i,3));
+        if(cs_sender==cs_match)
+        {
+            // Row identified
+            qDebug() << "Vector item # " << i << "has set matched to " << matched;
+        }
+    }
+}
+
+void VariableWidget::vectorItemMatchChanged(QString newMatch)
+{
+    CheckSpinItem *cs_sender = static_cast<CheckSpinItem*>(QObject::sender());
+    for(quint8 i =0;i<tableWidget->rowCount();i++)
+    {
+        CheckSpinItem *cs_match = static_cast<CheckSpinItem*>(tableWidget->cellWidget(i,3));
+        if(cs_sender==cs_match)
+        {
+            // Row identified
+            qDebug() << "Vector item # " << i << "has set match to " << newMatch;
+        }
     }
 }

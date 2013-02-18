@@ -15,7 +15,9 @@ public:
     QLineEdit *edit;
     QHBoxLayout *layout;
 signals:
-    
+    void matchToggled(bool);
+    void matchChanged(QString);
+
 public slots:
     
 };
