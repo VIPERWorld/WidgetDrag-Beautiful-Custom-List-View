@@ -1,10 +1,3 @@
----
-title: WidgetDrag
-description: Qt GUI class for building variable arrays
-author: Dante Sanchez
-created: 2013 Feb 18
----
-
 WidgetDrag
 ==========
 
