@@ -92,6 +92,7 @@ private:
     QPixmap deleteIconPixmap;
 
     int currentType;
+    bool isExpanded;
 
 public:
     explicit VariableWidget(QWidget *parent = 0);
@@ -102,7 +103,8 @@ signals:
     void sizeToggled(QSize);
     void deleteVar();
 public slots:
-    void expanded(bool);
+    void toggleExpand(bool);
+    void toggleExpand();
     void setByte();
     void setNumber();
     void setVector();

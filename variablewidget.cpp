@@ -10,11 +10,12 @@ VariableWidget::VariableWidget(QWidget *parent) :
     varlenIconPixmap = QPixmap("../WidgetDrag/varlen_icon.png");
     fixlenIconPixmap = QPixmap("../WidgetDrag/fixlen_icon.png");
     matchIconPixmap = QPixmap("../WidgetDrag/match_icon.png");
-           moreIconPixmap = QPixmap("../WidgetDrag/more_icon.png");
-             lessIconPixmap = QPixmap("../WidgetDrag/less_icon.png");
-       deleteIconPixmap = QPixmap("../WidgetDrag/delete_icon.png");
+    moreIconPixmap = QPixmap("../WidgetDrag/more_icon.png");
+    lessIconPixmap = QPixmap("../WidgetDrag/less_icon.png");
+    deleteIconPixmap = QPixmap("../WidgetDrag/delete_icon.png");
 
     currentType = BYTTYPE;
+    isExpanded = true;
 
     QIcon typeIcon=byteIconPixmap;
     QIcon lengthIcon=fixlenIconPixmap;
@@ -27,29 +28,30 @@ VariableWidget::VariableWidget(QWidget *parent) :
     title->setFixedHeight(20);
     typeIndicator = new QPushButton;
     typeIndicator->setIcon(typeIcon);
-    typeIndicator->setFixedWidth(20);
-    typeIndicator->setFixedHeight(20);
+    typeIndicator->setFixedWidth(24);
+    typeIndicator->setFixedHeight(24);
     typeIndicator->setFlat(true);
     lengthIndicator = new QPushButton;
     lengthIndicator->setIcon(lengthIcon);
-    lengthIndicator->setFixedWidth(20);
-    lengthIndicator->setFixedHeight(20);
+    lengthIndicator->setFixedWidth(24);
+    lengthIndicator->setFixedHeight(24);
     lengthIndicator->setFlat(true);
     matchIndicator = new QPushButton;
-    matchIndicator->setFixedWidth(20);
-    matchIndicator->setFixedHeight(20);
+    matchIndicator->setFixedWidth(24);
+    matchIndicator->setFixedHeight(24);
     matchIndicator->setFlat(true);
     moreButton = new QPushButton;
-    moreButton->setCheckable(true);
-    moreButton->setChecked(true);
-    moreButton->setFixedWidth(20);
-    moreButton->setFixedHeight(20);
+//    moreButton->setCheckable(true);
+//    moreButton->setChecked(true);
+    moreButton->setFixedWidth(24);
+    moreButton->setFixedHeight(24);
     moreButton->setIcon(lessIcon);
+    moreButton->setFlat(true);
     delButton = new QPushButton;
-    delButton->setFixedWidth(20);
-    delButton->setFixedHeight(20);
-
+    delButton->setFixedWidth(24);
+    delButton->setFixedHeight(24);
     delButton->setIcon(deleteIcon);
+    delButton->setFlat(true);
     titleLayout = new QHBoxLayout;
 
     titleLayout->addWidget(title);
@@ -58,6 +60,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     titleLayout->addWidget(matchIndicator);
     titleLayout->addWidget(moreButton);
     titleLayout->addWidget(delButton);
+    titleLayout->setMargin(0);
 
     // Name
     nameLabel = new QLabel("Name");
@@ -146,7 +149,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     headers.append("D");
     headers.append("X");
     tableWidget->setHorizontalHeaderLabels(headers);
-//    tableWidget->horizontalHeader()->setStretchLastSection(true);
+    //    tableWidget->horizontalHeader()->setStretchLastSection(true);
 
     tableWidget->setColumnWidth(0,80);
     tableWidget->setColumnWidth(1,40);
@@ -156,7 +159,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     tableWidget->setColumnWidth(5,30);
     tableWidget->setColumnWidth(6,30);
 
-addVectorItem(BYTTYPE);
+    addVectorItem(BYTTYPE);
 
     tableWidget->setItemDelegateForColumn(1,new QCenteredCell(tableWidget));
     tableWidget->setItemDelegateForColumn(2,new QCenteredCell(tableWidget));
@@ -191,10 +194,10 @@ addVectorItem(BYTTYPE);
     //    mainLayout->setContentsMargins(2,5,10,5);
     this->setLayout(mainLayout);
     this->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
-//    this->setMinimumWidth(400);
+    //    this->setMinimumWidth(400);
     connect(nameEdit,SIGNAL(textChanged(QString)),title,SLOT(setText(QString)));
     connect(nameEdit,SIGNAL(textChanged(QString)),this,SIGNAL(nameChange(QString)));
-    connect(moreButton,SIGNAL(toggled(bool)),this,SLOT(expanded(bool)));
+    connect(moreButton,SIGNAL(clicked()),this,SLOT(toggleExpand()));
     connect(delButton,SIGNAL(clicked()),this,SIGNAL(deleteVar()));
     connect(byteButton,SIGNAL(clicked()),this,SLOT(setByte()));
     connect(numberButton,SIGNAL(clicked()),this,SLOT(setNumber()));
@@ -215,12 +218,12 @@ QString VariableWidget::getName()
     return title->text();
 }
 
-void VariableWidget::expanded(bool expand)
+void VariableWidget::toggleExpand(bool expand)
 {
     if(expand)
     {
         mainLayout->addLayout(expandedLayout);
-         moreButton->setIcon(QIcon(lessIconPixmap));
+        moreButton->setIcon(QIcon(lessIconPixmap));
         //        mainLayout->addWidget(check);
     }
     else
@@ -241,6 +244,21 @@ void VariableWidget::expanded(bool expand)
     emit sizeToggled(this->sizeHint());
 }
 
+void VariableWidget::toggleExpand()
+{
+    if(isExpanded)
+    {
+        toggleExpand(false);
+        isExpanded=false;
+    }
+    else
+    {
+        toggleExpand(true);
+        isExpanded=true;
+
+    }
+}
+
 void VariableWidget::setByte()
 {
     QIcon typeIcon=byteIconPixmap;
@@ -250,6 +268,12 @@ void VariableWidget::setByte()
     numberButton->setEnabled(true);
     vectorButton->setEnabled(true);
 
+    lengthIndicator->setEnabled(true);
+    matchIndicator->setEnabled(true);
+
+    matchLabel->setVisible(true);
+    matchCheck->setVisible(true);
+    matchEdit->setVisible(true);
     // Handle options' visibility
     if(currentType==VECTYPE)
     {
@@ -268,9 +292,7 @@ void VariableWidget::setByte()
         lengthLabel->setVisible(true);
         lengthCheck->setVisible(true);
         lengthSpin->setVisible(true);
-        matchLabel->setVisible(true);
-        matchCheck->setVisible(true);
-        matchEdit->setVisible(true);
+
     }
     currentType=BYTTYPE;
     emit sizeToggled(this->sizeHint());
@@ -285,6 +307,18 @@ void VariableWidget::setNumber()
     numberButton->setEnabled(false);
     vectorButton->setEnabled(true);
 
+    // Widgets
+    lengthIndicator->setEnabled(true);
+    matchIndicator->setEnabled(false);
+
+    lengthLabel->setVisible(false);
+
+    matchLabel->setVisible(false);
+    matchCheck->setVisible(false);
+    matchEdit->setVisible(false);
+
+    lengthLabel->setVisible(true);
+
     // Handle options' visibility
     if(currentType==VECTYPE)
     {
@@ -292,7 +326,6 @@ void VariableWidget::setNumber()
         expandedLayout->removeItem(vectorLayout);
         expandedLayout->addLayout(singleLayout);
 
-        // Widgets
         repeatLabel->setVisible(false);
         repeatSpin->setVisible(false);
         tableWidget->setVisible(false);
@@ -303,12 +336,12 @@ void VariableWidget::setNumber()
         lengthLabel->setVisible(true);
         lengthCheck->setVisible(true);
         lengthSpin->setVisible(true);
-        matchLabel->setVisible(true);
-        matchCheck->setVisible(true);
-        matchEdit->setVisible(true);
+
     }
     currentType=NUMTYPE;
+
     emit sizeToggled(this->sizeHint());
+
 }
 
 void VariableWidget::setVector()
@@ -319,6 +352,10 @@ void VariableWidget::setVector()
     byteButton->setEnabled(true);
     numberButton->setEnabled(true);
     vectorButton->setEnabled(false);
+
+    lengthIndicator->setEnabled(false);
+    matchIndicator->setEnabled(false);
+
 
     // Handle options' visibility
     if(currentType!=VECTYPE)
@@ -341,6 +378,7 @@ void VariableWidget::setVector()
         matchLabel->setVisible(false);
         matchCheck->setVisible(false);
         matchEdit->setVisible(false);
+
     }
     currentType=VECTYPE;
     emit sizeToggled(this->sizeHint());
@@ -420,7 +458,7 @@ void VariableWidget::addVectorItem(int varType)
     QTableWidgetItem *newItem4 = new QTableWidgetItem;
 
     tableWidget->setItem(row, 0, newItem0);
-//    newItem1->setIcon(QIcon(byteIconPixmap));
+    //    newItem1->setIcon(QIcon(byteIconPixmap));
     tableWidget->setItem(row, 1, newItem1);
     newItem1->setFlags(newItem1->flags() ^ Qt::ItemIsEditable);
     tableWidget->setItem(row, 2, newItem2);
@@ -429,12 +467,12 @@ void VariableWidget::addVectorItem(int varType)
     tableWidget->setCellWidget(row,3,ceItem);
     tableWidget->setItem(row, 4, newItem4);
     tableWidget->setRowHeight(row,50);
-        tableWidget->verticalHeader()->setSectionResizeMode(row,QHeaderView::Fixed);
+    tableWidget->verticalHeader()->setSectionResizeMode(row,QHeaderView::Fixed);
 
-        connect(csItem,SIGNAL(lengthToggled(bool)),this,SLOT(vectorItemLengthToggled(bool)));
-        connect(csItem,SIGNAL(lengthChanged(int)),this,SLOT(vectorItemLengthChanged(int)));
-        connect(ceItem,SIGNAL(matchToggled(bool)),this,SLOT(vectorItemMatchToggled(bool)));
-        connect(ceItem,SIGNAL(matchChanged(QString)),this,SLOT(vectorItemMatchChanged(QString)));
+    connect(csItem,SIGNAL(lengthToggled(bool)),this,SLOT(vectorItemLengthToggled(bool)));
+    connect(csItem,SIGNAL(lengthChanged(int)),this,SLOT(vectorItemLengthChanged(int)));
+    connect(ceItem,SIGNAL(matchToggled(bool)),this,SLOT(vectorItemMatchToggled(bool)));
+    connect(ceItem,SIGNAL(matchChanged(QString)),this,SLOT(vectorItemMatchChanged(QString)));
 }
 
 void VariableWidget::addVectorItem()
@@ -455,10 +493,10 @@ void VariableWidget::tableCellClicked(int row, int col)
 {
     QTableWidgetItem *item = tableWidget->item(row,col);
     // Name
-//    if(col==1)
-//    {
-//        qDebug() << "clicked name cell";
-//    }
+    //    if(col==1)
+    //    {
+    //        qDebug() << "clicked name cell";
+    //    }
 
     // Type
     if(col==1)
