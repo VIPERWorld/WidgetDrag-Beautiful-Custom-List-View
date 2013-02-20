@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     parserengine.cpp \
     qcenteredcell.cpp \
     checkspinitem.cpp \
-    checkedititem.cpp
+    checkedititem.cpp \
+    vectoropsitem.cpp
 
 HEADERS  += widgetdrag.h \
     variablewidget.h \
@@ -27,6 +28,7 @@ HEADERS  += widgetdrag.h \
     parserengine.h \
     qcenteredcell.h \
     checkspinitem.h \
-    checkedititem.h
+    checkedititem.h \
+    vectoropsitem.h
 
 FORMS    += widgetdrag.ui

@@ -18,6 +18,7 @@
 #include "qcenteredcell.h"
 #include "checkspinitem.h"
 #include "checkedititem.h"
+#include "vectoropsitem.h"
 
 #define BYTTYPE 0
 #define NUMTYPE 1
@@ -72,7 +73,7 @@ private:
     QLabel *addVectorItemLabel;
     QPushButton *addVectorByteButton;
     QPushButton *addVectorNumberButton;
-    QHBoxLayout *addVectorItemLayout;
+//    QHBoxLayout *addVectorItemLayout;
 
     QTableWidget *tableWidget;
     QHBoxLayout *vectorListLayout;
@@ -119,6 +120,9 @@ public slots:
     void vectorItemLengthChanged(int);
     void vectorItemMatchToggled(bool);
     void vectorItemMatchChanged(QString);
+    void vectorItemMoveUp();
+    void vectorItemMoveDown();
+    void vectorItemRemove();
 };
 
 #endif // VARIABLEWIDGET_H

@@ -41,8 +41,8 @@ VariableWidget::VariableWidget(QWidget *parent) :
     matchIndicator->setFixedHeight(24);
     matchIndicator->setFlat(true);
     moreButton = new QPushButton;
-//    moreButton->setCheckable(true);
-//    moreButton->setChecked(true);
+    //    moreButton->setCheckable(true);
+    //    moreButton->setChecked(true);
     moreButton->setFixedWidth(24);
     moreButton->setFixedHeight(24);
     moreButton->setIcon(lessIcon);
@@ -91,23 +91,29 @@ VariableWidget::VariableWidget(QWidget *parent) :
     lengthLabel = new QLabel("Length");
     lengthCheck = new QCheckBox("Fixed");
     lengthCheck->setChecked(true);
+    lengthCheck->setFixedWidth(80);
     lengthSpin = new QSpinBox;
     lengthSpin->setValue(1);
-    lengthSpin->setMinimumWidth(60);
+    lengthSpin->setFixedWidth(100);
     lengthLayout = new QHBoxLayout;
-    lengthLayout->addStretch(1);
+    lengthLayout->addSpacing(20);
     lengthLayout->addWidget(lengthCheck);
-    lengthLayout->addStretch(1);
+    lengthLayout->addSpacing(10);
     lengthLayout->addWidget(lengthSpin);
     lengthLayout->addStretch(1);
 
     // Match
     matchLabel = new QLabel("Match");
     matchCheck = new QCheckBox;
+    matchCheck->setFixedWidth(80);
     matchEdit = new QLineEdit;
+    matchEdit->setFixedWidth(100);
     matchLayout = new QHBoxLayout;
+    matchLayout->addSpacing(20);
     matchLayout->addWidget(matchCheck);
+    matchLayout->addSpacing(10);
     matchLayout->addWidget(matchEdit);
+    matchLayout->addStretch(1);
 
     singleLayout = new QGridLayout;
     singleLayout->addWidget(lengthLabel,0,0);
@@ -134,30 +140,34 @@ VariableWidget::VariableWidget(QWidget *parent) :
     addVectorItemLabel = new QLabel("Add item");
     addVectorByteButton = new QPushButton("Byte");
     addVectorNumberButton = new QPushButton("Number");
-    addVectorItemLayout = new QHBoxLayout;
-    addVectorItemLayout->addWidget(addVectorByteButton);
-    addVectorItemLayout->addWidget(addVectorNumberButton);
+    //    addVectorItemLayout = new QHBoxLayout;
+    //    addVectorItemLayout->addWidget(addVectorByteButton);
+    //    addVectorItemLayout->addWidget(addVectorNumberButton);
 
-    tableWidget = new QTableWidget(0,7);
+    repeatLayout->addWidget(addVectorItemLabel);
+    repeatLayout->addWidget(addVectorByteButton);
+    repeatLayout->addWidget(addVectorNumberButton);
+
+    tableWidget = new QTableWidget(0,5);
     tableWidget->setVisible(false);
     QStringList headers;
     headers.append("Name");
     headers.append("Type");
     headers.append("Length");
     headers.append("Match");
-    headers.append("U");
-    headers.append("D");
-    headers.append("X");
+    headers.append("");
+
+
     tableWidget->setHorizontalHeaderLabels(headers);
     //    tableWidget->horizontalHeader()->setStretchLastSection(true);
 
     tableWidget->setColumnWidth(0,80);
     tableWidget->setColumnWidth(1,40);
-    tableWidget->setColumnWidth(2,80);
+    tableWidget->setColumnWidth(2,75);
     tableWidget->setColumnWidth(3,100);
-    tableWidget->setColumnWidth(4,30);
-    tableWidget->setColumnWidth(5,30);
-    tableWidget->setColumnWidth(6,30);
+    tableWidget->setColumnWidth(4,80);
+    //    tableWidget->setColumnWidth(5,30);
+    //    tableWidget->setColumnWidth(6,30);
 
     addVectorItem(BYTTYPE);
 
@@ -166,8 +176,8 @@ VariableWidget::VariableWidget(QWidget *parent) :
     tableWidget->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Fixed);
     tableWidget->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Fixed);
     tableWidget->horizontalHeader()->setSectionResizeMode(4,QHeaderView::Fixed);
-    tableWidget->horizontalHeader()->setSectionResizeMode(5,QHeaderView::Fixed);
-    tableWidget->horizontalHeader()->setSectionResizeMode(6,QHeaderView::Fixed);
+    //    tableWidget->horizontalHeader()->setSectionResizeMode(5,QHeaderView::Fixed);
+    //    tableWidget->horizontalHeader()->setSectionResizeMode(6,QHeaderView::Fixed);
 
     vectorListLayout = new QHBoxLayout;
     vectorListLayout->addWidget(tableWidget);
@@ -176,7 +186,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     vectorLayout->addWidget(repeatLabel,0,0);
     vectorLayout->addLayout(repeatLayout,0,1);
     vectorLayout->addWidget(addVectorItemLabel,1,0);
-    vectorLayout->addLayout(addVectorItemLayout,1,1);
+    //    vectorLayout->addLayout(addVectorItemLayout,1,1);
     vectorLayout->addLayout(vectorListLayout,2,0,2,2,Qt::AlignLeft);
     //    vectorLayout
 
@@ -441,6 +451,7 @@ void VariableWidget::addVectorItem(int varType)
     tableWidget->insertRow(row);
     CheckSpinItem *csItem=new CheckSpinItem;
     CheckEditItem *ceItem=new CheckEditItem;
+    VectorOpsItem *opItem=new VectorOpsItem;
 
 
     QTableWidgetItem *newItem0 = new QTableWidgetItem("variable");
@@ -466,13 +477,19 @@ void VariableWidget::addVectorItem(int varType)
     tableWidget->setItem(row, 3, newItem3);
     tableWidget->setCellWidget(row,3,ceItem);
     tableWidget->setItem(row, 4, newItem4);
-    tableWidget->setRowHeight(row,50);
+    tableWidget->setCellWidget(row,4,opItem);
+    tableWidget->setRowHeight(row,36);
     tableWidget->verticalHeader()->setSectionResizeMode(row,QHeaderView::Fixed);
 
     connect(csItem,SIGNAL(lengthToggled(bool)),this,SLOT(vectorItemLengthToggled(bool)));
     connect(csItem,SIGNAL(lengthChanged(int)),this,SLOT(vectorItemLengthChanged(int)));
+
     connect(ceItem,SIGNAL(matchToggled(bool)),this,SLOT(vectorItemMatchToggled(bool)));
     connect(ceItem,SIGNAL(matchChanged(QString)),this,SLOT(vectorItemMatchChanged(QString)));
+
+    connect(opItem,SIGNAL(moveUp()),this,SLOT(vectorItemMoveUp()));
+    connect(opItem,SIGNAL(moveDown()),this,SLOT(vectorItemMoveDown()));
+    connect(opItem,SIGNAL(removeVar()),this,SLOT(vectorItemRemove()));
 }
 
 void VariableWidget::addVectorItem()
@@ -569,6 +586,83 @@ void VariableWidget::vectorItemMatchChanged(QString newMatch)
         {
             // Row identified
             qDebug() << "Vector item # " << i << "has set match to " << newMatch;
+        }
+    }
+}
+
+void VariableWidget::vectorItemMoveUp()
+{
+    VectorOpsItem *op_sender = static_cast<VectorOpsItem*>(QObject::sender());
+    int row;
+    for(quint8 i =0;i<tableWidget->rowCount();i++)
+    {
+        VectorOpsItem *op_match = static_cast<VectorOpsItem*>(tableWidget->cellWidget(i,4));
+        if(op_sender==op_match)
+        {
+            // Row identified
+            qDebug() << "Vector item # " << i << "has requested to move up";
+            row=i;
+
+        }
+    }
+    if(row>0)
+    {
+        tableWidget->insertRow(row-1);
+        tableWidget->setItem(row-1,0,tableWidget->takeItem(row+1,0));
+        tableWidget->setItem(row-1,1,tableWidget->takeItem(row+1,1));
+        tableWidget->setCellWidget(row-1,2,tableWidget->cellWidget(row+1,2));
+        tableWidget->setCellWidget(row-1,3,tableWidget->cellWidget(row+1,3));
+        tableWidget->setCellWidget(row-1,4,tableWidget->cellWidget(row+1,4));
+        tableWidget->setRowHeight(row-1,36);
+        tableWidget->verticalHeader()->setSectionResizeMode(row-1,QHeaderView::Fixed);
+
+        tableWidget->removeRow(row+1);
+    }
+}
+
+void VariableWidget::vectorItemMoveDown()
+{
+    VectorOpsItem *op_sender = static_cast<VectorOpsItem*>(QObject::sender());
+    int row;
+    for(quint8 i =0;i<tableWidget->rowCount();i++)
+    {
+        VectorOpsItem *op_match = static_cast<VectorOpsItem*>(tableWidget->cellWidget(i,4));
+        if(op_sender==op_match)
+        {
+            // Row identified
+            qDebug() << "Vector item # " << i << "has requested to move down";
+            row=i;
+
+        }
+    }
+    if(row<tableWidget->rowCount()-1)
+    {
+        tableWidget->insertRow(row+2);
+        tableWidget->setItem(row+2,0,tableWidget->takeItem(row,0));
+        tableWidget->setItem(row+2,1,tableWidget->takeItem(row,1));
+        tableWidget->setCellWidget(row+2,2,tableWidget->cellWidget(row,2));
+        tableWidget->setCellWidget(row+2,3,tableWidget->cellWidget(row,3));
+        tableWidget->setCellWidget(row+2,4,tableWidget->cellWidget(row,4));
+        tableWidget->setRowHeight(row+2,36);
+        tableWidget->verticalHeader()->setSectionResizeMode(row+2,QHeaderView::Fixed);
+
+        tableWidget->removeRow(row);
+    }
+}
+
+void VariableWidget::vectorItemRemove()
+{
+    VectorOpsItem *op_sender = static_cast<VectorOpsItem*>(QObject::sender());
+    int row;
+    for(quint8 i =0;i<tableWidget->rowCount();i++)
+    {
+        VectorOpsItem *op_match = static_cast<VectorOpsItem*>(tableWidget->cellWidget(i,4));
+        if(op_sender==op_match)
+        {
+            // Row identified
+            qDebug() << "Vector item # " << i << "has requested to be removed";
+            tableWidget->removeRow(i);
+
         }
     }
 }
