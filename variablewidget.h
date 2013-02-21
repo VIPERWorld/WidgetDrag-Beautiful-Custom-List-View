@@ -12,6 +12,8 @@
 #include <QPushButton>
 #include <QTableWidget>
 #include <QHeaderView>
+#include "mylistwidget.h"
+#include "vectoritemwidget.h"
 
 #include <parserengine.h>
 #include <QDebug>
@@ -32,40 +34,19 @@ private:
     QVBoxLayout *mainLayout;
 
     // Title
-    QLabel *title;
-    QPushButton *typeIndicator;
-    QPushButton *lengthIndicator;
-    QPushButton *matchIndicator;
+    QLineEdit *nameEdit;
+    QPushButton *typeButton;
+    QPushButton *lengthButton;
+    QPushButton *matchButton;
     QPushButton *moreButton;
     QPushButton *delButton;
     QHBoxLayout *titleLayout;
 
-    // Name
-    QLabel *nameLabel;
-    QLineEdit *nameEdit;
-
-    // Type
-    QLabel *typeLabel;
-    QPushButton *byteButton;
-    QPushButton *numberButton;
-    QPushButton *vectorButton;
-    QHBoxLayout *typeLayout;
-
-    // Common layout
-    QGridLayout *commonLayout;
-
-    // Single variable
-    QLabel *lengthLabel;
-    QCheckBox *lengthCheck;
     QSpinBox *lengthSpin;
-    QHBoxLayout *lengthLayout;
-    QLabel *matchLabel;
-    QCheckBox *matchCheck;
     QLineEdit *matchEdit;
-    QHBoxLayout *matchLayout;
-    QGridLayout *singleLayout;
+    QPushButton *hexButton;
 
-// Vector variable
+    // Vector variable
     QLabel *repeatLabel;
     QSpinBox *repeatSpin;
     QHBoxLayout *repeatLayout;
@@ -73,9 +54,9 @@ private:
     QLabel *addVectorItemLabel;
     QPushButton *addVectorByteButton;
     QPushButton *addVectorNumberButton;
-//    QHBoxLayout *addVectorItemLayout;
 
-    QTableWidget *tableWidget;
+    MyListWidget *vectorItemList;
+
     QHBoxLayout *vectorListLayout;
     QGridLayout *vectorLayout;
 
@@ -87,13 +68,20 @@ private:
     QPixmap vectorIconPixmap;
     QPixmap varlenIconPixmap;
     QPixmap fixlenIconPixmap;
-    QPixmap matchIconPixmap;
+    QPixmap matchoffIconPixmap;
+    QPixmap matchonIconPixmap;
+    QPixmap hexonIconPixmap;
+    QPixmap hexoffIconPixmap;
     QPixmap moreIconPixmap;
     QPixmap lessIconPixmap;
     QPixmap deleteIconPixmap;
 
     int currentType;
+    bool matched;
+    bool fixed;
+    bool hexed;
     bool isExpanded;
+
 
 public:
     explicit VariableWidget(QWidget *parent = 0);
@@ -109,10 +97,12 @@ public slots:
     void setByte();
     void setNumber();
     void setVector();
-    void toggleLength(bool);
+    void toggleType();
+    void toggleLength();
     void changeLength(int);
-    void toggleMatch(bool);
+    void toggleMatch();
     void changeMatch(QString);
+    void toggleHex();
     void addVectorItem(void);
     void addVectorItem(int);
     void tableCellClicked(int,int);

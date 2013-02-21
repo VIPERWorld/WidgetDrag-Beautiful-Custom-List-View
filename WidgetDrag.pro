@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     qcenteredcell.cpp \
     checkspinitem.cpp \
     checkedititem.cpp \
-    vectoropsitem.cpp
+    vectoropsitem.cpp \
+    vectoritemwidget.cpp
 
 HEADERS  += widgetdrag.h \
     variablewidget.h \
@@ -29,6 +30,7 @@ HEADERS  += widgetdrag.h \
     qcenteredcell.h \
     checkspinitem.h \
     checkedititem.h \
-    vectoropsitem.h
+    vectoropsitem.h \
+    vectoritemwidget.h
 
 FORMS    += widgetdrag.ui

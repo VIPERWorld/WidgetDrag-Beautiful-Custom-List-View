@@ -71,28 +71,15 @@ void Widget::itemSize(QSize newSize)
     qDebug() << "row " << row << ", size: " << newSize.width() << " x " << newSize.height();
     QListWidgetItem *item = lw->item(row);
     item->setSizeHint(newSize);
-    //    lw->item(vwList->indexOf(vw))->setSizeHint(vw->sizeHint());
 }
 
 //void Widget::resorted(QModelIndex sp,int ss,int se,QModelIndex dp,int dr, QPrivateSignal ps)
 void Widget::resorted(int src,int dest,QListWidgetItem* item)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(lw->itemWidget(item));
-    //    qDebug() << "resorted:";
-    //    qDebug() << "item " << vw->getName() << "moved from row " << src << "to row " << dest;
 
-    // Print list:
-    //    for(int i=0;i<vwList->size();i++)
-    //    {
-    //        qDebug() << vwList->at(i)->getName();
-    //    }
     // Resort in list:
     vwList->insert(dest, vwList->takeAt(src));
-    //    qDebug() << "after resort:";
-    //    for(int i=0;i<vwList->size();i++)
-    //    {
-    //        qDebug() << vwList->at(i)->getName();
-    //    }
 }
 
 void Widget::removed(int row)
