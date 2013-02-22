@@ -48,12 +48,17 @@ private:
 
     // Vector variable
     QLabel *repeatLabel;
+//    QIcon *iconLabel;
     QSpinBox *repeatSpin;
-    QHBoxLayout *repeatLayout;
 
-    QLabel *addVectorItemLabel;
-    QPushButton *addVectorByteButton;
-    QPushButton *addVectorNumberButton;
+    QPushButton *addByteButton;
+    QPushButton *addNumberButton;
+
+//    QHBoxLayout *repeatLayout;
+
+//    QLabel *addVectorItemLabel;
+//    QPushButton *addVectorByteButton;
+//    QPushButton *addVectorNumberButton;
 
     MyListWidget *vectorItemList;
 
@@ -72,6 +77,9 @@ private:
     QPixmap matchonIconPixmap;
     QPixmap hexonIconPixmap;
     QPixmap hexoffIconPixmap;
+    QPixmap cycleIconPixmap;
+    QPixmap addbyteIconPixmap;
+    QPixmap addnumberIconPixmap;
     QPixmap moreIconPixmap;
     QPixmap lessIconPixmap;
     QPixmap deleteIconPixmap;
