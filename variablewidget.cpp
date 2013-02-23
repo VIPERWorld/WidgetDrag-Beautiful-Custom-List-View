@@ -3,7 +3,6 @@
 VariableWidget::VariableWidget(QWidget *parent) :
     QWidget(parent)
 {
-
     // Load assets
     byteIconPixmap = QPixmap("../WidgetDrag/byte_icon.png");
     numberIconPixmap = QPixmap("../WidgetDrag/number_icon.png");
@@ -16,7 +15,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     hexonIconPixmap = QPixmap("../WidgetDrag/hexon_icon.png");
     cycleIconPixmap = QPixmap("../WidgetDrag/cycle_icon.png");
     addbyteIconPixmap = QPixmap("../WidgetDrag/addbyte_icon.png");
-     addnumberIconPixmap = QPixmap("../WidgetDrag/addnumber_icon.png");
+    addnumberIconPixmap = QPixmap("../WidgetDrag/addnumber_icon.png");
     moreIconPixmap = QPixmap("../WidgetDrag/more_icon.png");
     lessIconPixmap = QPixmap("../WidgetDrag/less_icon.png");
     deleteIconPixmap = QPixmap("../WidgetDrag/delete_icon.png");
@@ -43,14 +42,14 @@ VariableWidget::VariableWidget(QWidget *parent) :
     // typeButton & lengthButton
     nameEdit = new QLineEdit("variable");
     nameEdit->setToolTip("Enter the variable name");
-    nameEdit->setMinimumWidth(60);
+    nameEdit->setMinimumWidth(40);
     nameEdit->setFixedHeight(24);
     typeButton = new QPushButton;
     typeButton->setToolTip("Toggle between byte, number, and vector type");
     typeButton->setIcon(typeIcon);
     typeButton->setFixedWidth(24);
     typeButton->setFixedHeight(24);
-//    typeButton->setFlat(true);
+    //    typeButton->setFlat(true);
 
     // Single variable
     lengthButton= new QPushButton;
@@ -58,7 +57,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     lengthButton->setIcon(lengthIcon);
     lengthButton->setFixedWidth(24);
     lengthButton->setFixedHeight(24);
-//    lengthButton->setFlat(true);
+    //    lengthButton->setFlat(true);
     lengthSpin = new QSpinBox;
     lengthSpin->setToolTip("Enter a fixed length");
     lengthSpin->setValue(1);
@@ -67,7 +66,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     matchButton->setToolTip("Toggle match on or off");
     matchButton->setFixedWidth(24);
     matchButton->setFixedHeight(24);
-//    matchButton->setFlat(true);
+    //    matchButton->setFlat(true);
     matchButton->setIcon(matchoffIcon);
     matchEdit = new QLineEdit;
     matchEdit->setToolTip("Enter the byte array to match");
@@ -76,7 +75,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     hexButton->setToolTip("Toggle between ASCII and hexadecimal display");
     hexButton->setFixedWidth(24);
     hexButton->setFixedHeight(24);
-//    hexButton->setFlat(true);
+    //    hexButton->setFlat(true);
     hexButton->setIcon(hexoffIcon);
 
     // Repeat
@@ -104,12 +103,12 @@ VariableWidget::VariableWidget(QWidget *parent) :
     moreButton->setFixedWidth(24);
     moreButton->setFixedHeight(24);
     moreButton->setIcon(lessIcon);
-//    moreButton->setFlat(true);
+    //    moreButton->setFlat(true);
     delButton = new QPushButton;
     delButton->setFixedWidth(24);
     delButton->setFixedHeight(24);
     delButton->setIcon(deleteIcon);
-//    delButton->setFlat(true);
+    //    delButton->setFlat(true);
 
     titleLayout = new QHBoxLayout;
     titleLayout->addWidget(nameEdit);
@@ -119,7 +118,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     titleLayout->addWidget(lengthSpin);
     titleLayout->addWidget(repeatSpin);
     titleLayout->addWidget(addByteButton);
-        titleLayout->addWidget(addNumberButton);
+    titleLayout->addWidget(addNumberButton);
     titleLayout->addWidget(matchButton);
     titleLayout->addWidget(matchEdit);
     titleLayout->addWidget(hexButton);
@@ -128,20 +127,20 @@ VariableWidget::VariableWidget(QWidget *parent) :
     titleLayout->setMargin(0);
     // Vector variable
 
-//    repeatLayout = new QHBoxLayout;
-//    repeatLayout->addStretch(1);
-//    repeatLayout->addWidget(repeatSpin);
-//    repeatLayout->addStretch(1);
+    //    repeatLayout = new QHBoxLayout;
+    //    repeatLayout->addStretch(1);
+    //    repeatLayout->addWidget(repeatSpin);
+    //    repeatLayout->addStretch(1);
 
     // Vector items
 
-//    addVectorItemLabel = new QLabel("Add item");
-//    addVectorByteButton = new QPushButton("Byte");
-//    addVectorNumberButton = new QPushButton("Number");
+    //    addVectorItemLabel = new QLabel("Add item");
+    //    addVectorByteButton = new QPushButton("Byte");
+    //    addVectorNumberButton = new QPushButton("Number");
 
-//    repeatLayout->addWidget(addVectorItemLabel);
-//    repeatLayout->addWidget(addVectorByteButton);
-//    repeatLayout->addWidget(addVectorNumberButton);
+    //    repeatLayout->addWidget(addVectorItemLabel);
+    //    repeatLayout->addWidget(addVectorByteButton);
+    //    repeatLayout->addWidget(addVectorNumberButton);
 
     vectorItemList = new MyListWidget(this);
     vectorItemList->setVisible(false);
@@ -152,27 +151,27 @@ VariableWidget::VariableWidget(QWidget *parent) :
     item->setSizeHint(iw->sizeHint());
     vectorItemList->setItemWidget(item,iw);
 
-    addVectorItem(BYTTYPE);
+//    addVectorItem(BYTTYPE);
 
     vectorListLayout = new QHBoxLayout;
     vectorListLayout->addSpacing(10);
     vectorListLayout->addWidget(vectorItemList);
 
-//    vectorLayout = new QGridLayout;
-//    vectorLayout->addWidget(repeatLabel,0,0);
-//    vectorLayout->addLayout(repeatLayout,0,1);
-//    vectorLayout->addLayout(vectorListLayout,2,0,1,2,Qt::AlignHCenter);
+    //    vectorLayout = new QGridLayout;
+    //    vectorLayout->addWidget(repeatLabel,0,0);
+    //    vectorLayout->addLayout(repeatLayout,0,1);
+    //    vectorLayout->addLayout(vectorListLayout,2,0,1,2,Qt::AlignHCenter);
 
 
     // Expanded
-    expandedLayout = new QVBoxLayout;
-    expandedLayout->addLayout(vectorListLayout);
+//    expandedLayout = new QVBoxLayout;
+//    expandedLayout->addLayout(vectorListLayout);
 
     // Main
     mainLayout = new QVBoxLayout(this);
 
     mainLayout->addLayout(titleLayout);
-    mainLayout->addLayout(expandedLayout);
+//    mainLayout->addLayout(vectorListLayout);
     this->setLayout(mainLayout);
     this->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
     connect(moreButton,SIGNAL(clicked()),this,SLOT(toggleExpand()));
@@ -183,8 +182,10 @@ VariableWidget::VariableWidget(QWidget *parent) :
     connect(matchButton,SIGNAL(clicked()),this,SLOT(toggleMatch()));
     connect(hexButton,SIGNAL(clicked()),this,SLOT(toggleHex()));
     connect(matchEdit,SIGNAL(textChanged(QString)),this,SLOT(changeMatch(QString)));
-//    connect(addVectorByteButton,SIGNAL(clicked()),this,SLOT(addVectorItem()));
-//    connect(addVectorNumberButton,SIGNAL(clicked()),this,SLOT(addVectorItem()));
+    connect(addByteButton,SIGNAL(clicked()),this,SLOT(addVectorByte()));
+    connect(addNumberButton,SIGNAL(clicked()),this,SLOT(addVectorNumber()));
+    //    connect(addVectorByteButton,SIGNAL(clicked()),this,SLOT(addVectorItem()));
+    //    connect(addVectorNumberButton,SIGNAL(clicked()),this,SLOT(addVectorItem()));
 
     emit sizeToggled(this->sizeHint());
 }
@@ -260,34 +261,33 @@ void VariableWidget::setByte()
     matchButton->setEnabled(true);
     matchEdit->setVisible(true);
     matchEdit->setEnabled(true);
-hexButton->setVisible(true);
-hexButton->setEnabled(true);
+    hexButton->setVisible(true);
+    hexButton->setEnabled(true);
 
-repeatLabel->setVisible(false);
-repeatSpin->setVisible(false);
-addByteButton->setVisible(false);
-addNumberButton->setVisible(false);
+    repeatLabel->setVisible(false);
+    repeatSpin->setVisible(false);
+    addByteButton->setVisible(false);
+    addNumberButton->setVisible(false);
 
-vectorItemList->setVisible(false);
-
-mainLayout->removeItem(expandedLayout);
+    vectorItemList->setVisible(false);
+    mainLayout->removeItem(vectorListLayout);
     // Handle options' visibility
-//    if(currentType==VECTYPE)
-//    {
-//        // Layout
-//        expandedLayout->removeItem(vectorLayout);
+    //    if(currentType==VECTYPE)
+    //    {
+    //        // Layout
+    //        expandedLayout->removeItem(vectorLayout);
 
-//        // Widgets
-//        repeatLabel->setVisible(false);
-//        repeatSpin->setVisible(false);
-//        vectorItemList->setVisible(false);
-//        addVectorItemLabel->setVisible(false);
-//        addVectorByteButton->setVisible(false);
-//        addVectorNumberButton->setVisible(false);
+    //        // Widgets
+    //        repeatLabel->setVisible(false);
+    //        repeatSpin->setVisible(false);
+    //        vectorItemList->setVisible(false);
+    //        addVectorItemLabel->setVisible(false);
+    //        addVectorByteButton->setVisible(false);
+    //        addVectorNumberButton->setVisible(false);
 
-//        lengthSpin->setVisible(true);
+    //        lengthSpin->setVisible(true);
 
-//    }
+    //    }
     currentType=BYTTYPE;
     emit sizeToggled(this->sizeHint());
 }
@@ -317,23 +317,8 @@ void VariableWidget::setNumber()
 
 
     vectorItemList->setVisible(false);
-    mainLayout->removeItem(expandedLayout);
-    // Handle options' visibility
-//    if(currentType==VECTYPE)
-//    {
-//        // Layout
-//        expandedLayout->removeItem(vectorLayout);
+    mainLayout->removeItem(vectorListLayout);
 
-//        repeatLabel->setVisible(false);
-//        repeatSpin->setVisible(false);
-//        vectorItemList->setVisible(false);
-//        addVectorItemLabel->setVisible(false);
-//        addVectorByteButton->setVisible(false);
-//        addVectorNumberButton->setVisible(false);
-
-//       lengthSpin->setVisible(true);
-
-//    }
     currentType=NUMTYPE;
 
     emit sizeToggled(this->sizeHint());
@@ -346,12 +331,9 @@ void VariableWidget::setVector()
     typeButton->setIcon(typeIcon);
 
     lengthButton->setVisible(false);
-//    lengthButton->setEnabled(false);
     lengthSpin->setVisible(false);
-//    lengthSpin->setEnabled(false);
 
     matchButton->setVisible(false);
-//    matchButton->setEnabled(false);
     matchEdit->setVisible(false);
     hexButton->setVisible(false);
 
@@ -362,27 +344,8 @@ void VariableWidget::setVector()
     addNumberButton->setVisible(true);
 
     vectorItemList->setVisible(true);
+    mainLayout->addLayout(vectorListLayout);
 
-    mainLayout->addLayout(expandedLayout);
-
-    // Handle options' visibility
-//    if(currentType!=VECTYPE)
-//    {
-//        // Layout
-//        expandedLayout->addLayout(vectorLayout);
-
-//        // Widgets
-//        repeatLabel->setVisible(true);
-//        repeatSpin->setVisible(true);
-//        vectorItemList->setVisible(true);
-//        addVectorItemLabel->setVisible(true);
-//        addVectorByteButton->setVisible(true);
-//        addVectorNumberButton->setVisible(true);
-
-//        lengthSpin->setVisible(false);
-//        matchEdit->setVisible(false);
-
-//    }
     currentType=VECTYPE;
     emit sizeToggled(this->sizeHint());
 }
@@ -446,22 +409,32 @@ void VariableWidget::changeMatch(QString newMatch)
 
 }
 
-void VariableWidget::addVectorItem(int varType)
+void VariableWidget::addVectorByte()
 {
+    QListWidgetItem *item = new QListWidgetItem;
+    VectorItemWidget *iw = new VectorItemWidget(this);
+    vectorItemList->addItem(item);
+    item->setSizeHint(iw->sizeHint());
+    vectorItemList->setItemWidget(item,iw);
 }
 
-void VariableWidget::addVectorItem()
+void VariableWidget::addVectorNumber()
 {
-//    QPushButton *btn = static_cast<QPushButton*>(QObject::sender());
-//    if(btn==addVectorByteButton)
-//    {
+    QListWidgetItem *item = new QListWidgetItem;
+    VectorItemWidget *iw = new VectorItemWidget(this);
+    vectorItemList->addItem(item);
+    item->setSizeHint(iw->sizeHint());
+    vectorItemList->setItemWidget(item,iw);
+    //    QPushButton *btn = static_cast<QPushButton*>(QObject::sender());
+    //    if(btn==addVectorByteButton)
+    //    {
 
-//        addVectorItem(BYTTYPE);
-//    }
-//    else
-//    {
-//        addVectorItem(NUMTYPE);
-//    }
+    //        addVectorItem(BYTTYPE);
+    //    }
+    //    else
+    //    {
+    //        addVectorItem(NUMTYPE);
+    //    }
 }
 
 void VariableWidget::tableCellClicked(int row, int col)

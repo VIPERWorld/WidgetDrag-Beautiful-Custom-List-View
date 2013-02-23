@@ -20,6 +20,9 @@ Widget::Widget(QWidget *parent) :
         addVariable();
 
     }
+
+//    setStyleSheet("VariableWidget {background-color: rgb(0,0,0); color: rgb(255,255,255);}");
+
     connect(ui->addButton,SIGNAL(clicked()),this,SLOT(addVariable()));
     connect(lw,SIGNAL(itemMoved(int,int,QListWidgetItem*)),this,SLOT(resorted(int,int,QListWidgetItem*)));
     connect(lw,SIGNAL(itemRemoved(int)),this,SLOT(removed(int)));

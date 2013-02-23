@@ -111,8 +111,8 @@ public slots:
     void toggleMatch();
     void changeMatch(QString);
     void toggleHex();
-    void addVectorItem(void);
-    void addVectorItem(int);
+    void addVectorByte(void);
+    void addVectorNumber(void);
     void tableCellClicked(int,int);
     void vectorItemLengthToggled(bool);
     void vectorItemLengthChanged(int);

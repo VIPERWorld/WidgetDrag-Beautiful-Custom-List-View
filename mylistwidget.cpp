@@ -10,7 +10,8 @@ MyListWidget::MyListWidget(QWidget *parent) :
     setDragEnabled(true);
     setDragDropMode(QAbstractItemView::InternalMove);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-//    setSelectionMode(QAbstractItemView::ContiguousSelection);
+
+//    setStyleSheet("QListView { color: rgb(230,230,230); background-color: rgba(0,0,0,0);");
 }
 
 void MyListWidget::dropEvent(QDropEvent *event)
