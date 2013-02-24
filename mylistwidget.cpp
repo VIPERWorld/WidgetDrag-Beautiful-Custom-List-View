@@ -3,15 +3,17 @@
 MyListWidget::MyListWidget(QWidget *parent) :
     QListWidget(parent)
 {
-//    item= new QListWidgetItem(this);
-//    item
-
     setAcceptDrops(true);
     setDragEnabled(true);
     setDragDropMode(QAbstractItemView::InternalMove);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
-//    setStyleSheet("QListView { color: rgb(230,230,230); background-color: rgba(0,0,0,0);");
+    QPalette pal = this->palette();
+    pal.setColor(QPalette::Base,QColor("black"));
+
+    this->setPalette(pal);
+    setStyleSheet("QListView::item:selected {background-color: rgb(20,20,20); selection-color: rgb(0,100,0);}"\
+                  "QListView::item:hover { background-color: rgb(50,50,50);}");
 }
 
 void MyListWidget::dropEvent(QDropEvent *event)

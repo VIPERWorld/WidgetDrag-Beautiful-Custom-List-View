@@ -21,7 +21,6 @@ VariableWidget::VariableWidget(QWidget *parent) :
     deleteIconPixmap = QPixmap("../WidgetDrag/delete_icon.png");
     cycleIconPixmap = cycleIconPixmap.scaled(20,20,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 
-
     currentType = BYTTYPE;
     isExpanded = false;
     fixed=true;
@@ -44,6 +43,8 @@ VariableWidget::VariableWidget(QWidget *parent) :
     nameEdit->setToolTip("Enter the variable name");
     nameEdit->setMinimumWidth(40);
     nameEdit->setFixedHeight(24);
+nameEdit->setFrame(false);
+
     typeButton = new QPushButton;
     typeButton->setToolTip("Toggle between byte, number, and vector type");
     typeButton->setIcon(typeIcon);
@@ -71,6 +72,8 @@ VariableWidget::VariableWidget(QWidget *parent) :
     matchEdit = new QLineEdit;
     matchEdit->setToolTip("Enter the byte array to match");
     matchEdit->setFixedWidth(100);
+    matchEdit->setFixedHeight(24);
+    matchEdit->setFrame(false);
     hexButton = new QPushButton;
     hexButton->setToolTip("Toggle between ASCII and hexadecimal display");
     hexButton->setFixedWidth(24);
@@ -125,22 +128,6 @@ VariableWidget::VariableWidget(QWidget *parent) :
     titleLayout->addWidget(moreButton);
     titleLayout->addWidget(delButton);
     titleLayout->setMargin(0);
-    // Vector variable
-
-    //    repeatLayout = new QHBoxLayout;
-    //    repeatLayout->addStretch(1);
-    //    repeatLayout->addWidget(repeatSpin);
-    //    repeatLayout->addStretch(1);
-
-    // Vector items
-
-    //    addVectorItemLabel = new QLabel("Add item");
-    //    addVectorByteButton = new QPushButton("Byte");
-    //    addVectorNumberButton = new QPushButton("Number");
-
-    //    repeatLayout->addWidget(addVectorItemLabel);
-    //    repeatLayout->addWidget(addVectorByteButton);
-    //    repeatLayout->addWidget(addVectorNumberButton);
 
     vectorItemList = new MyListWidget(this);
     vectorItemList->setVisible(false);
@@ -151,30 +138,17 @@ VariableWidget::VariableWidget(QWidget *parent) :
     item->setSizeHint(iw->sizeHint());
     vectorItemList->setItemWidget(item,iw);
 
-//    addVectorItem(BYTTYPE);
-
     vectorListLayout = new QHBoxLayout;
     vectorListLayout->addSpacing(10);
     vectorListLayout->addWidget(vectorItemList);
-
-    //    vectorLayout = new QGridLayout;
-    //    vectorLayout->addWidget(repeatLabel,0,0);
-    //    vectorLayout->addLayout(repeatLayout,0,1);
-    //    vectorLayout->addLayout(vectorListLayout,2,0,1,2,Qt::AlignHCenter);
-
-
-    // Expanded
-//    expandedLayout = new QVBoxLayout;
-//    expandedLayout->addLayout(vectorListLayout);
 
     // Main
     mainLayout = new QVBoxLayout(this);
 
     mainLayout->addLayout(titleLayout);
-//    mainLayout->addLayout(vectorListLayout);
     this->setLayout(mainLayout);
     this->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
-    connect(moreButton,SIGNAL(clicked()),this,SLOT(toggleExpand()));
+//    connect(moreButton,SIGNAL(clicked()),this,SLOT(toggleExpand()));
     connect(delButton,SIGNAL(clicked()),this,SIGNAL(deleteVar()));
     connect(typeButton,SIGNAL(clicked()),this,SLOT(toggleType()));
     connect(lengthButton,SIGNAL(clicked()),this,SLOT(toggleLength()));
@@ -184,8 +158,11 @@ VariableWidget::VariableWidget(QWidget *parent) :
     connect(matchEdit,SIGNAL(textChanged(QString)),this,SLOT(changeMatch(QString)));
     connect(addByteButton,SIGNAL(clicked()),this,SLOT(addVectorByte()));
     connect(addNumberButton,SIGNAL(clicked()),this,SLOT(addVectorNumber()));
-    //    connect(addVectorByteButton,SIGNAL(clicked()),this,SLOT(addVectorItem()));
-    //    connect(addVectorNumberButton,SIGNAL(clicked()),this,SLOT(addVectorItem()));
+
+    setStyleSheet("QLineEdit {background-color:rgb(0,0,0); color: rgb(200,200,200); selection-color: rgb(0,0,0); selection-background-color: rgb(250,250,250);"\
+                  "border-style: solid; border-width: 2px; border-color: rgb(100,100,100); border-radius: 4px;} "\
+                      "QLineEdit:hover {background-color:rgb(20,20,20);}");
+//                  ":hover {background-color:rgb(150,0,0);}");
 
     emit sizeToggled(this->sizeHint());
 }

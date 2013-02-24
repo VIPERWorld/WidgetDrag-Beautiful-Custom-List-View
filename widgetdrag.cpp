@@ -20,9 +20,6 @@ Widget::Widget(QWidget *parent) :
         addVariable();
 
     }
-
-//    setStyleSheet("VariableWidget {background-color: rgb(0,0,0); color: rgb(255,255,255);}");
-
     connect(ui->addButton,SIGNAL(clicked()),this,SLOT(addVariable()));
     connect(lw,SIGNAL(itemMoved(int,int,QListWidgetItem*)),this,SLOT(resorted(int,int,QListWidgetItem*)));
     connect(lw,SIGNAL(itemRemoved(int)),this,SLOT(removed(int)));
@@ -44,10 +41,11 @@ void Widget::nameChanged(QString newName)
 
 void Widget::addVariable()
 {
-    VariableWidget *vw = new VariableWidget(this);
+    VariableWidget *vw = new VariableWidget(lw);
     vwList->append(vw);
     QIcon icon = QIcon::fromTheme("edit-undo",QIcon("../WidgetDrag/circle.png"));
     QListWidgetItem *item = new QListWidgetItem(lw);
+
 //    item->setIcon(icon);
     lw->addItem(item);
     item->setSizeHint(vw->sizeHint());
