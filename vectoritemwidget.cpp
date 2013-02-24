@@ -23,7 +23,6 @@ VectorItemWidget::VectorItemWidget(QWidget *parent) :
     QIcon lengthIcon=fixlenIconPixmap;
     QIcon matchoffIcon = matchoffIconPixmap;
     QIcon hexoffIcon = hexoffIconPixmap;
-
     QIcon deleteIcon = deleteIconPixmap;
 
     // Title
@@ -33,6 +32,7 @@ VectorItemWidget::VectorItemWidget(QWidget *parent) :
     nameEdit->setToolTip("Enter the variable name");
     nameEdit->setMinimumWidth(60);
     nameEdit->setFixedHeight(24);
+    nameEdit->setFrame(false);
     typeButton = new QPushButton;
     typeButton->setToolTip("Toggle between byte, number, and vector type");
     typeButton->setIcon(typeIcon);
@@ -60,6 +60,8 @@ VectorItemWidget::VectorItemWidget(QWidget *parent) :
     matchEdit = new QLineEdit;
     matchEdit->setToolTip("Enter the byte array to match");
     matchEdit->setFixedWidth(100);
+     matchEdit->setFixedHeight(24);
+    matchEdit->setFrame(false);
     hexButton = new QPushButton;
     hexButton->setToolTip("Toggle between ASCII and hexadecimal display");
     hexButton->setFixedWidth(24);
@@ -96,6 +98,7 @@ VectorItemWidget::VectorItemWidget(QWidget *parent) :
     connect(matchButton,SIGNAL(clicked()),this,SLOT(toggleMatch()));
     connect(hexButton,SIGNAL(clicked()),this,SLOT(toggleHex()));
     connect(matchEdit,SIGNAL(textChanged(QString)),this,SLOT(changeMatch(QString)));
+    connect(delButton,SIGNAL(clicked()),this,SIGNAL(deleteVar()));
 
     emit sizeToggled(this->sizeHint());
 }

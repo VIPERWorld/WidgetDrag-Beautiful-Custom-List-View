@@ -12,7 +12,7 @@ MyListWidget::MyListWidget(QWidget *parent) :
     pal.setColor(QPalette::Base,QColor("black"));
 
     this->setPalette(pal);
-    setStyleSheet("QListView::item:selected {background-color: rgb(20,20,20); selection-color: rgb(0,100,0);}"\
+    setStyleSheet("QListView::item:selected {background-color: rgb(20,20,20); border-style: solid; border-color: rgb(0,0,0);}"\
                   "QListView::item:hover { background-color: rgb(50,50,50);}");
 }
 

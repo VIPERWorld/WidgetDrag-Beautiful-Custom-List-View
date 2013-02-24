@@ -17,10 +17,6 @@
 
 #include <parserengine.h>
 #include <QDebug>
-#include "qcenteredcell.h"
-#include "checkspinitem.h"
-#include "checkedititem.h"
-#include "vectoropsitem.h"
 
 #define BYTTYPE 0
 #define NUMTYPE 1
