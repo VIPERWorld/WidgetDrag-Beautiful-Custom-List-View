@@ -19,14 +19,13 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
-    
+
 private:
     Ui::Widget *ui;
     QList<VariableWidget*> *vwList;
     MyListWidget *lw;
 private slots:
-    void nameChanged(QString);
-//    void resorted(QModelIndex,int,int,QModelIndex,int,QPrivateSignal);
+    // Widget handling
     void addVariable();
     void remVariable();
     void resorted(int,int,QListWidgetItem*);
@@ -34,6 +33,15 @@ private slots:
     void itemSelected(QListWidgetItem*);
     void differentRow(int);
     void itemSize(QSize);
+
+    // Variable data
+    void nameChanged(QString);
+    void typeChanged(int);
+    void lengthToggled(bool);
+    void lengthChanged(int);
+    void matchToggled(bool);
+    void matchChanged(QString);
+    void repeatChanged(int);
 };
 
 #endif // WIDGETDRAG_H

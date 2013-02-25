@@ -12,11 +12,10 @@
 #include <QPushButton>
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QDebug>
 #include "mylistwidget.h"
 #include "vectoritemwidget.h"
-
-#include <parserengine.h>
-#include <QDebug>
+#include "parserengine.h"
 
 #define BYTTYPE 0
 #define NUMTYPE 1
@@ -50,18 +49,11 @@ private:
     QPushButton *addByteButton;
     QPushButton *addNumberButton;
 
-//    QHBoxLayout *repeatLayout;
-
-//    QLabel *addVectorItemLabel;
-//    QPushButton *addVectorByteButton;
-//    QPushButton *addVectorNumberButton;
-
     MyListWidget *vectorItemList;
-
     QHBoxLayout *vectorListLayout;
-    QGridLayout *vectorLayout;
+//    QGridLayout *vectorLayout;
 
-    QVBoxLayout *expandedLayout;
+//    QVBoxLayout *expandedLayout;
 
     // Assets
     QPixmap byteIconPixmap;
@@ -86,18 +78,28 @@ private:
     bool hexed;
     bool isExpanded;
 
+    void setupUI();
 
 public:
     explicit VariableWidget(QWidget *parent = 0);
     QString getName(void);
+    ComplexVariable variable;
 
 signals:
     void nameChange(QString);
+    void typeChange(int);
+    void lengthToggle(bool);
+    void lengthChange(int);
+    void matchToggle(bool);
+    void matchChange(QString);
+    void repeatChange(int);
+
     void sizeToggled(QSize);
     void deleteVar();
 public slots:
     void toggleExpand(bool);
     void toggleExpand();
+    void nameChanged(QString);
     void setByte();
     void setNumber();
     void setVector();
@@ -107,6 +109,7 @@ public slots:
     void toggleMatch();
     void changeMatch(QString);
     void toggleHex();
+    void changeRepeat(int);
     void addVectorByte(void);
     void addVectorNumber(void);
     void tableCellClicked(int,int);

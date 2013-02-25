@@ -3,6 +3,29 @@
 
 #include <QObject>
 
+class BaseVariable{
+public:
+    QString name;
+    quint8 type;
+    bool fixed;
+    bool match;
+    quint8 length;
+    QString matchBytes;
+};
+
+class ComplexVariable{
+public:
+    QString name;
+    quint8 type;
+    bool fixed;
+    bool match;
+    quint8 length;
+    QString matchBytes;
+    quint8 repeat;
+    QList<BaseVariable> vector;
+};
+
+
 class VariableClass {
 public:
     QString name;

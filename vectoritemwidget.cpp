@@ -51,6 +51,7 @@ VectorItemWidget::VectorItemWidget(QWidget *parent) :
     lengthSpin->setToolTip("Enter a fixed length");
     lengthSpin->setValue(1);
     lengthSpin->setFixedWidth(40);
+    lengthSpin->setFixedHeight(24);
     matchButton = new QPushButton;
     matchButton->setToolTip("Toggle match on or off");
     matchButton->setFixedWidth(24);

@@ -15,7 +15,7 @@ Widget::Widget(QWidget *parent) :
     ui->verticalLayout->addWidget(lw);
     ui->verticalLayout->addWidget(ui->addButton);
 
-    for(quint8 i =0;i<3;i++)
+    for(quint8 i =0;i<1;i++)
     {
         addVariable();
 
@@ -36,20 +36,84 @@ void Widget::nameChanged(QString newName)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
     int index = vwList->indexOf(vw);
-    //    VariableWidget *vw = ui->listWidget->itemWidget(ui->listWidget->item());
+    qDebug() << "variable " << index << "has changed name to " << newName;
+}
+
+void Widget::typeChanged(int newType)
+{
+    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+    int index = vwList->indexOf(vw);
+
+    QString type;
+    switch(newType)
+    {
+    case BYTTYPE:
+        type = "byte";
+        break;
+    case NUMTYPE:
+        type = "number";
+        break;
+    default:
+        type = "vector";
+        break;
+    }
+    qDebug() << "variable " << index << "has changed type to " << type;
+}
+
+
+void Widget::lengthToggled(bool fixed)
+{
+    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+    int index = vwList->indexOf(vw);
+    qDebug() << "variable " << index << "has set fixed length to " << fixed;
+}
+
+void Widget::lengthChanged(int newLength)
+{
+    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+    int index = vwList->indexOf(vw);
+    qDebug() << "variable " << index << "has set the fixed length to" << newLength;
+}
+
+void Widget::matchToggled(bool matched)
+{
+    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+    int index = vwList->indexOf(vw);
+    qDebug() << "variable " << index << "has set match to " << matched;
+}
+
+void Widget::matchChanged(QString newMatch)
+{
+    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+    int index = vwList->indexOf(vw);
+    qDebug() << "variable " << index << "has set string to match to" << newMatch;
+}
+
+void Widget::repeatChanged(int newRepeat)
+{
+    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+    int index = vwList->indexOf(vw);
+    qDebug() << "variable " << index << "has set the vector repetitions to" << newRepeat;
 }
 
 void Widget::addVariable()
 {
     VariableWidget *vw = new VariableWidget(lw);
     vwList->append(vw);
-    QIcon icon = QIcon::fromTheme("edit-undo",QIcon("../WidgetDrag/circle.png"));
     QListWidgetItem *item = new QListWidgetItem(lw);
 
-//    item->setIcon(icon);
     lw->addItem(item);
     item->setSizeHint(vw->sizeHint());
     lw->setItemWidget(item,vw);
+
+    connect(vw,SIGNAL(nameChange(QString)),this,SLOT(nameChanged(QString)));
+    connect(vw,SIGNAL(typeChange(int)),this,SLOT(typeChanged(int)));
+    connect(vw,SIGNAL(lengthToggle(bool)),this,SLOT(lengthToggled(bool)));
+    connect(vw,SIGNAL(lengthChange(int)),this,SLOT(lengthChanged(int)));
+    connect(vw,SIGNAL(matchToggle(bool)),this,SLOT(matchToggled(bool)));
+    connect(vw,SIGNAL(matchChange(QString)),this,SLOT(matchChanged(QString)));
+    connect(vw,SIGNAL(repeatChange(int)),this,SLOT(repeatChanged(int)));
+
     connect(vw,SIGNAL(sizeToggled(QSize)),this,SLOT(itemSize(QSize)));
     connect(vw,SIGNAL(deleteVar()),this,SLOT(remVariable()));
 }
