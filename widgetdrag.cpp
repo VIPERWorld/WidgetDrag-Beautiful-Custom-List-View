@@ -152,12 +152,12 @@ void Widget::removed(int row)
     // Print list:
     for(int i=0;i<vwList->size();i++)
     {
-        qDebug() << vwList->at(i)->getName();
+//        qDebug() << vwList->at(i)->getName();
     }
     vwList->removeAt(row);
     for(int i=0;i<vwList->size();i++)
     {
-        qDebug() << vwList->at(i)->getName();
+//        qDebug() << vwList->at(i)->getName();
     }
 }
 

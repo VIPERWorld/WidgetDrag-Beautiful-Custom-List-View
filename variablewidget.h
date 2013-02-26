@@ -78,12 +78,14 @@ private:
     bool hexed;
     bool isExpanded;
 
+    QList<VectorItemWidget*> *itemList;
+
     void setupUI();
 
 public:
     explicit VariableWidget(QWidget *parent = 0);
-    QString getName(void);
     ComplexVariable variable;
+
 
 signals:
     void nameChange(QString);
@@ -93,6 +95,8 @@ signals:
     void matchToggle(bool);
     void matchChange(QString);
     void repeatChange(int);
+    void vectorChanged();
+//    void propertyChange();
 
     void sizeToggled(QSize);
     void deleteVar();
@@ -110,16 +114,19 @@ public slots:
     void changeMatch(QString);
     void toggleHex();
     void changeRepeat(int);
-    void addVectorByte(void);
-    void addVectorNumber(void);
-    void tableCellClicked(int,int);
+    void vectorItemNameChanged(QString);
+    void vectorItemTypeChanged(int);
     void vectorItemLengthToggled(bool);
     void vectorItemLengthChanged(int);
     void vectorItemMatchToggled(bool);
     void vectorItemMatchChanged(QString);
-    void vectorItemMoveUp();
-    void vectorItemMoveDown();
-    void vectorItemRemove();
+    void vectorItemResorted();
+    void vectorItemRemoved();
+    void addVectorByte(void);
+    void addVectorNumber(void);
+//    void vectorItemMoveUp();
+//    void vectorItemMoveDown();
+//    void vectorItemRemove();
 };
 
 #endif // VARIABLEWIDGET_H

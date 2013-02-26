@@ -9,7 +9,6 @@ VariableWidget::VariableWidget(QWidget *parent) :
     matched=false;
     hexed=false;
 
-    setupUI();
 
     variable.name = "variable";
     variable.type = BYTTYPE;
@@ -17,13 +16,21 @@ VariableWidget::VariableWidget(QWidget *parent) :
     variable.match=false;
     variable.length=1;
     variable.matchBytes.clear();
+
+    BaseVariable base;
+    base.name = "item1";
+    base.type = BYTTYPE;
+    base.fixed=true;
+    base.match=false;
+    base.length=1;
+    base.matchBytes.clear();
     variable.vector.clear();
+    variable.vector.append(base);
 
-}
+    itemList = new QList<VectorItemWidget*>;
 
-QString VariableWidget::getName()
-{
-    return nameEdit->text();
+
+    setupUI();
 }
 
 void VariableWidget::nameChanged(QString newName)
@@ -73,7 +80,6 @@ void VariableWidget::setByte()
     moreButton->setVisible(false);
     vectorItemList->setVisible(false);
 
-
     lengthButton->setVisible(true);
     lengthButton->setEnabled(true);
     lengthSpin->setVisible(true);
@@ -85,8 +91,6 @@ void VariableWidget::setByte()
     matchEdit->setEnabled(true);
     hexButton->setVisible(true);
     hexButton->setEnabled(true);
-
-
 
     currentType=BYTTYPE;
     emit sizeToggled(this->sizeHint());
@@ -119,11 +123,8 @@ void VariableWidget::setNumber()
     hexButton->setVisible(true);
     hexButton->setEnabled(false);
 
-
-
     currentType=NUMTYPE;
     emit sizeToggled(this->sizeHint());
-
 }
 
 void VariableWidget::setVector()
@@ -137,7 +138,6 @@ void VariableWidget::setVector()
     matchButton->setVisible(false);
     matchEdit->setVisible(false);
     hexButton->setVisible(false);
-
 
     repeatLabel->setVisible(true);
     repeatSpin->setVisible(true);
@@ -206,7 +206,6 @@ void VariableWidget::toggleHex()
         hexIcon=hexoffIconPixmap;
     }
     hexButton->setIcon(hexIcon);
-
 }
 
 void VariableWidget::changeMatch(QString newMatch)
@@ -246,29 +245,18 @@ void VariableWidget::toggleExpand()
     toggleExpand(isExpanded);
 }
 
-
-void VariableWidget::addVectorByte()
+void VariableWidget::vectorItemNameChanged(QString newName)
 {
-    QListWidgetItem *item = new QListWidgetItem;
-    VectorItemWidget *iw = new VectorItemWidget(this);
-    vectorItemList->addItem(item);
-    item->setSizeHint(iw->sizeHint());
-    vectorItemList->setItemWidget(item,iw);
-    connect(iw,SIGNAL(deleteVar()),this,SLOT(vectorItemRemove()));
+    VectorItemWidget *iw = static_cast<VectorItemWidget*>(QObject::sender());
+    int row = itemList->indexOf(iw);
+    qDebug() << "item " << itemList->at(row)->variable.name << "from variable " << variable.name;
+
 }
 
-void VariableWidget::addVectorNumber()
+void VariableWidget::vectorItemTypeChanged(int newType)
 {
-    QListWidgetItem *item = new QListWidgetItem;
-    VectorItemWidget *iw = new VectorItemWidget(this);
-    vectorItemList->addItem(item);
-    item->setSizeHint(iw->sizeHint());
-    vectorItemList->setItemWidget(item,iw);
-    connect(iw,SIGNAL(deleteVar()),this,SLOT(vectorItemRemove()));
-}
 
-void VariableWidget::tableCellClicked(int row, int col)
-{
+
 }
 
 void VariableWidget::vectorItemLengthToggled(bool fixed)
@@ -289,17 +277,36 @@ void VariableWidget::vectorItemMatchChanged(QString newMatch)
 {
 }
 
-void VariableWidget::vectorItemMoveUp()
+void VariableWidget::addVectorByte()
+{
+    QListWidgetItem *item = new QListWidgetItem;
+    VectorItemWidget *iw = new VectorItemWidget(this);
+    vectorItemList->addItem(item);
+    item->setSizeHint(iw->sizeHint());
+    vectorItemList->setItemWidget(item,iw);
+    itemList->append(iw);
+    connect(iw,SIGNAL(deleteVar()),this,SLOT(vectorItemRemoved()));
+    connect(iw,SIGNAL(nameChange(QString)),this,SLOT(vectorItemNameChanged(QString)));
+}
+
+void VariableWidget::addVectorNumber()
+{
+    QListWidgetItem *item = new QListWidgetItem;
+    VectorItemWidget *iw = new VectorItemWidget(this);
+    vectorItemList->addItem(item);
+    item->setSizeHint(iw->sizeHint());
+    vectorItemList->setItemWidget(item,iw);
+    itemList->append(iw);
+    connect(iw,SIGNAL(deleteVar()),this,SLOT(vectorItemRemoved()));
+    connect(iw,SIGNAL(nameChange(QString)),this,SLOT(vectorItemNameChanged(QString)));
+}
+
+void VariableWidget::vectorItemResorted()
 {
 
 }
 
-void VariableWidget::vectorItemMoveDown()
-{
-
-}
-
-void VariableWidget::vectorItemRemove()
+void VariableWidget::vectorItemRemoved()
 {
     VectorItemWidget *op_sender = static_cast<VectorItemWidget*>(QObject::sender());
     qDebug() << "signal caught";

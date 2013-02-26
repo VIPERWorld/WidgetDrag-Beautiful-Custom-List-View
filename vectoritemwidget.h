@@ -11,8 +11,9 @@
 #include <QSpinBox>
 #include <QPushButton>
 #include <QHeaderView>
-
 #include <QDebug>
+
+#include "parserengine.h"
 
 #define BYTTYPE 0
 #define NUMTYPE 1
@@ -54,17 +55,25 @@ private:
     bool fixed;
     bool hexed;
 
+    void setupUi();
+
 public:
     explicit VectorItemWidget(QWidget *parent = 0);
-    QString getName(void);
+    BaseVariable variable;
 
 signals:
     void nameChange(QString);
+    void typeChange(int);
+    void lengthToggle(bool);
+    void lengthChange(int);
+    void matchToggle(bool);
+    void matchChange(QString);
     void sizeToggled(QSize);
     void deleteVar();
 public slots:
     void setByte();
     void setNumber();
+    void changeName(QString);
     void toggleType();
     void toggleLength();
     void changeLength(int);
