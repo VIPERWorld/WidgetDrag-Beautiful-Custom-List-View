@@ -9,67 +9,47 @@ VariableWidget::VariableWidget(QWidget *parent) :
     matched=false;
     hexed=false;
 
+    variable = new ComplexVariable;
+    variable->name = "variable";
+    variable->type = BYTTYPE;
+    variable->fixed=true;
+    variable->match=false;
+    variable->length=1;
+    variable->repeat=5;
+    variable->matchBytes.clear();
 
-    variable.name = "variable";
-    variable.type = BYTTYPE;
-    variable.fixed=true;
-    variable.match=false;
-    variable.length=1;
-    variable.matchBytes.clear();
-
-    BaseVariable base;
-    base.name = "item1";
-    base.type = BYTTYPE;
-    base.fixed=true;
-    base.match=false;
-    base.length=1;
-    base.matchBytes.clear();
-    variable.vector.clear();
-    variable.vector.append(base);
-
+    variable->vector = new QList<BaseVariable*>;
     itemList = new QList<VectorItemWidget*>;
-
 
     setupUI();
 }
 
 void VariableWidget::nameChanged(QString newName)
 {
-    variable.name = newName;
+    variable->name = newName;
     emit nameChange(newName);
 }
 
 void VariableWidget::toggleType()
 {
-    currentType++;
     switch(currentType)
     {
-    case 1:
-        typeButton->setIcon(QIcon(numberIconPixmap));
+    case BYTTYPE:
         setNumber();
-        variable.type = NUMTYPE;
         break;
-    case 2:
-        typeButton->setIcon(QIcon(vectorIconPixmap));
-        moreButton->setIcon(QIcon(moreIconPixmap));
-        isExpanded=true;
-        variable.type = VECTYPE;
+    case NUMTYPE:
         setVector();
         break;
     default:
-        currentType=0;
-        variable.type = BYTTYPE;
         setByte();
-        typeButton->setIcon(QIcon(byteIconPixmap));
         break;
     }
-    emit typeChange(variable.type);
+    emit typeChange(variable->type);
 }
 
 void VariableWidget::setByte()
 {
-    QIcon typeIcon=byteIconPixmap;
-    typeButton->setIcon(typeIcon);
+    typeButton->setIcon(QIcon(byteIconPixmap));
 
     mainLayout->removeItem(vectorListLayout);
 
@@ -93,13 +73,14 @@ void VariableWidget::setByte()
     hexButton->setEnabled(true);
 
     currentType=BYTTYPE;
+    variable->type = BYTTYPE;
+
     emit sizeToggled(this->sizeHint());
 }
 
 void VariableWidget::setNumber()
 {
-    QIcon typeIcon=numberIconPixmap;
-    typeButton->setIcon(typeIcon);
+    typeButton->setIcon(QIcon(numberIconPixmap));
 
     // Widgets
     mainLayout->removeItem(vectorListLayout);
@@ -124,13 +105,15 @@ void VariableWidget::setNumber()
     hexButton->setEnabled(false);
 
     currentType=NUMTYPE;
+    variable->type = NUMTYPE;
     emit sizeToggled(this->sizeHint());
 }
 
 void VariableWidget::setVector()
 {
-    QIcon typeIcon=vectorIconPixmap;
-    typeButton->setIcon(typeIcon);
+    typeButton->setIcon(QIcon(vectorIconPixmap));
+    moreButton->setIcon(QIcon(moreIconPixmap));
+    isExpanded=true;
 
     lengthButton->setVisible(false);
     lengthSpin->setVisible(false);
@@ -148,6 +131,7 @@ void VariableWidget::setVector()
     mainLayout->addLayout(vectorListLayout);
 
     currentType=VECTYPE;
+    variable->type = VECTYPE;
     emit sizeToggled(this->sizeHint());
 }
 
@@ -164,13 +148,13 @@ void VariableWidget::toggleLength()
         lengthIcon=varlenIconPixmap;
     }
     lengthButton->setIcon(lengthIcon);
-    variable.fixed=fixed;
+    variable->fixed=fixed;
     emit lengthToggle(fixed);
 }
 
 void VariableWidget::changeLength(int newLength)
 {
-    variable.length=newLength;
+    variable->length=newLength;
     emit lengthChange(newLength);
 }
 
@@ -188,7 +172,7 @@ void VariableWidget::toggleMatch()
         matchIcon=matchoffIconPixmap;
     }
     matchButton->setIcon(matchIcon);
-    variable.match=matched;
+    variable->match=matched;
     emit matchToggle(matched);
 }
 
@@ -210,13 +194,13 @@ void VariableWidget::toggleHex()
 
 void VariableWidget::changeMatch(QString newMatch)
 {
-    variable.matchBytes = newMatch;
+    variable->matchBytes = newMatch;
     emit matchChange(newMatch);
 }
 
 void VariableWidget::changeRepeat(int newRepeat)
 {
-    variable.repeat=newRepeat;
+    variable->repeat=newRepeat;
     emit repeatChange(newRepeat);
 }
 
@@ -249,14 +233,12 @@ void VariableWidget::vectorItemNameChanged(QString newName)
 {
     VectorItemWidget *iw = static_cast<VectorItemWidget*>(QObject::sender());
     int row = itemList->indexOf(iw);
-    qDebug() << "item " << itemList->at(row)->variable.name << "from variable " << variable.name;
-
 }
 
 void VariableWidget::vectorItemTypeChanged(int newType)
 {
-
-
+    VectorItemWidget *iw = static_cast<VectorItemWidget*>(QObject::sender());
+    int row = itemList->indexOf(iw);
 }
 
 void VariableWidget::vectorItemLengthToggled(bool fixed)
@@ -285,6 +267,8 @@ void VariableWidget::addVectorByte()
     item->setSizeHint(iw->sizeHint());
     vectorItemList->setItemWidget(item,iw);
     itemList->append(iw);
+    BaseVariable *bv = iw->variable;
+    variable->vector->append(bv);
     connect(iw,SIGNAL(deleteVar()),this,SLOT(vectorItemRemoved()));
     connect(iw,SIGNAL(nameChange(QString)),this,SLOT(vectorItemNameChanged(QString)));
 }
@@ -297,13 +281,16 @@ void VariableWidget::addVectorNumber()
     item->setSizeHint(iw->sizeHint());
     vectorItemList->setItemWidget(item,iw);
     itemList->append(iw);
+    variable->vector->append(iw->variable);
     connect(iw,SIGNAL(deleteVar()),this,SLOT(vectorItemRemoved()));
     connect(iw,SIGNAL(nameChange(QString)),this,SLOT(vectorItemNameChanged(QString)));
 }
 
-void VariableWidget::vectorItemResorted()
+void VariableWidget::vectorItemResorted(int src,int dest,QListWidgetItem* item)
 {
-
+    // Resort in list:
+    itemList->insert(dest,itemList->takeAt(src));
+    variable->vector->insert(dest,variable->vector->takeAt(src));
 }
 
 void VariableWidget::vectorItemRemoved()
@@ -325,6 +312,9 @@ void VariableWidget::vectorItemRemoved()
     }
     vectorItemList->removeItemWidget(vectorItemList->item(row));
     vectorItemList->takeItem(row);
+    itemList->removeAt(row);
+    variable->vector->removeAt(row);
+    delete op_sender;
 }
 
 void VariableWidget::setupUI()
@@ -482,6 +472,7 @@ void VariableWidget::setupUI()
     connect(addByteButton,SIGNAL(clicked()),this,SLOT(addVectorByte()));
     connect(addNumberButton,SIGNAL(clicked()),this,SLOT(addVectorNumber()));
     connect(moreButton,SIGNAL(clicked()),this,SLOT(toggleExpand()));
+    connect(vectorItemList,SIGNAL(itemMoved(int,int,QListWidgetItem*)),this,SLOT(vectorItemResorted(int,int,QListWidgetItem*)));
 
     emit sizeToggled(this->sizeHint());
 }

@@ -10,81 +10,62 @@ VectorItemWidget::VectorItemWidget(QWidget *parent) :
 
     setupUi();
 
-    variable.name = "variable";
-    variable.type = BYTTYPE;
-    variable.fixed=true;
-    variable.match=false;
-    variable.length=1;
-    variable.matchBytes.clear();
+    variable = new BaseVariable;
+    variable->name = "variable";
+    variable->type = BYTTYPE;
+    variable->fixed=true;
+    variable->match=false;
+    variable->length=1;
+    variable->matchBytes.clear();
 }
 
 void VectorItemWidget::changeName(QString newName)
 {
-    variable.name = newName;
+    variable->name = newName;
     emit nameChange(newName);
 }
 
 void VectorItemWidget::toggleType()
 {
-    currentType++;
     switch(currentType)
     {
-    case 1:
-        typeButton->setIcon(QIcon(numberIconPixmap));
+    case BYTTYPE:
+
         setNumber();
         break;
     default:
-        currentType=0;
         setByte();
-        typeButton->setIcon(QIcon(byteIconPixmap));
         break;
     }
-    variable.type=currentType;
+
     emit typeChange(currentType);
 }
 
 void VectorItemWidget::setByte()
 {
-    QIcon typeIcon=byteIconPixmap;
-    typeButton->setIcon(typeIcon);
+    typeButton->setIcon(QIcon(byteIconPixmap));
 
-    lengthButton->setVisible(true);
-    lengthButton->setEnabled(true);
-    lengthSpin->setVisible(true);
-    lengthSpin->setEnabled(true);
-
-    matchButton->setVisible(true);
     matchButton->setEnabled(true);
-    matchEdit->setVisible(true);
     matchEdit->setEnabled(true);
-    hexButton->setVisible(true);
     hexButton->setEnabled(true);
 
     currentType=BYTTYPE;
+    variable->type=currentType;
     emit sizeToggled(this->sizeHint());
 }
 
 void VectorItemWidget::setNumber()
 {
-    QIcon typeIcon=numberIconPixmap;
-    typeButton->setIcon(typeIcon);
+    typeButton->setIcon(QIcon(numberIconPixmap));
 
     // Widgets
-    lengthButton->setVisible(true);
-    lengthButton->setEnabled(true);
-    lengthSpin->setVisible(true);
-    lengthButton->setEnabled(true);
-
-    matchButton->setVisible(true);
     matchButton->setEnabled(false);
-    matchEdit->setVisible(true);
     matchEdit->setEnabled(false);
-    hexButton->setVisible(true);
     hexButton->setEnabled(false);
 
     // Handle options' visibility
     currentType=NUMTYPE;
-
+    variable->type=currentType;
     emit sizeToggled(this->sizeHint());
 }
 
@@ -101,13 +82,13 @@ void VectorItemWidget::toggleLength()
         lengthIcon=varlenIconPixmap;
     }
     lengthButton->setIcon(lengthIcon);
-    variable.fixed=fixed;
+    variable->fixed=fixed;
     emit lengthToggle(fixed);
 }
 
 void VectorItemWidget::changeLength(int newLength)
 {
-    variable.length = newLength;
+    variable->length = newLength;
     emit lengthChange(newLength);
 }
 
@@ -125,7 +106,7 @@ void VectorItemWidget::toggleMatch()
         matchIcon=matchoffIconPixmap;
     }
     matchButton->setIcon(matchIcon);
-    variable.match = matched;
+    variable->match = matched;
     emit matchToggle(matched);
 }
 
@@ -143,12 +124,11 @@ void VectorItemWidget::toggleHex()
         hexIcon=hexoffIconPixmap;
     }
     hexButton->setIcon(hexIcon);
-
 }
 
 void VectorItemWidget::changeMatch(QString newMatch)
 {
-    variable.matchBytes = newMatch;
+    variable->matchBytes = newMatch;
     emit matchChange(newMatch);
 }
 
@@ -209,14 +189,12 @@ void VectorItemWidget::setupUi()
     hexButton->setToolTip("Toggle between ASCII and hexadecimal display");
     hexButton->setFixedWidth(24);
     hexButton->setFixedHeight(24);
-    //    hexButton->setFlat(true);
     hexButton->setIcon(hexoffIcon);
 
     delButton = new QPushButton;
     delButton->setFixedWidth(24);
     delButton->setFixedHeight(24);
     delButton->setIcon(deleteIcon);
-    //    delButton->setFlat(true);
 
     titleLayout = new QHBoxLayout;
     titleLayout->addWidget(nameEdit);

@@ -22,7 +22,7 @@ public:
     quint8 length;
     QString matchBytes;
     quint8 repeat;
-    QList<BaseVariable> vector;
+    QList<BaseVariable*> *vector;
 };
 
 

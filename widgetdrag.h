@@ -19,6 +19,7 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
+    QList<ComplexVariable*> *variableList;
 
 private:
     Ui::Widget *ui;
@@ -29,7 +30,7 @@ private slots:
     void addVariable();
     void remVariable();
     void resorted(int,int,QListWidgetItem*);
-    void removed(int);
+    void itemRemoved(int);
     void itemSelected(QListWidgetItem*);
     void differentRow(int);
     void itemSize(QSize);
@@ -42,6 +43,9 @@ private slots:
     void matchToggled(bool);
     void matchChanged(QString);
     void repeatChanged(int);
+
+    // Testing operation
+    void printList();
 };
 
 #endif // WIDGETDRAG_H

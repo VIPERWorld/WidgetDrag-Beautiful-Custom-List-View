@@ -43,7 +43,6 @@ private:
 
     // Vector variable
     QLabel *repeatLabel;
-//    QIcon *iconLabel;
     QSpinBox *repeatSpin;
 
     QPushButton *addByteButton;
@@ -51,9 +50,6 @@ private:
 
     MyListWidget *vectorItemList;
     QHBoxLayout *vectorListLayout;
-//    QGridLayout *vectorLayout;
-
-//    QVBoxLayout *expandedLayout;
 
     // Assets
     QPixmap byteIconPixmap;
@@ -84,8 +80,7 @@ private:
 
 public:
     explicit VariableWidget(QWidget *parent = 0);
-    ComplexVariable variable;
-
+    ComplexVariable *variable;
 
 signals:
     void nameChange(QString);
@@ -120,13 +115,10 @@ public slots:
     void vectorItemLengthChanged(int);
     void vectorItemMatchToggled(bool);
     void vectorItemMatchChanged(QString);
-    void vectorItemResorted();
+    void vectorItemResorted(int,int,QListWidgetItem*);
     void vectorItemRemoved();
     void addVectorByte(void);
     void addVectorNumber(void);
-//    void vectorItemMoveUp();
-//    void vectorItemMoveDown();
-//    void vectorItemRemove();
 };
 
 #endif // VARIABLEWIDGET_H

@@ -15,11 +15,36 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QPushButton" name="addButton">
-     <property name="text">
-      <string>Add</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="addButtonsLayout">
+     <item>
+      <widget class="QPushButton" name="addByteButton">
+       <property name="text">
+        <string>Add Byte</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addNumberButton">
+       <property name="text">
+        <string>Add Number</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addVectorButton">
+       <property name="text">
+        <string>Add Vector</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="printListButton">
+       <property name="text">
+        <string>Print List</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
