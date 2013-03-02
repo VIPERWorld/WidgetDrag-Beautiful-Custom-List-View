@@ -12,9 +12,7 @@ Widget::Widget(QWidget *parent) :
     vwList = new QList<VariableWidget*>;
     variableList = new QList<ComplexVariable*>;
     lw = new MyListWidget(this);
-    //    ui->verticalLayout->removeWidget(ui->addByteButton);
     ui->verticalLayout->addWidget(lw);
-    //    ui->verticalLayout->addWidget(ui->addButton);
 
     for(quint8 i =0;i<1;i++)
     {
@@ -36,32 +34,23 @@ Widget::~Widget()
     delete ui;
 }
 
+void Widget::variableListChanged()
+{
+    printList();
+    emit updateVariableList();
+}
+
+
 void Widget::nameChanged(QString newName)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
     int index = vwList->indexOf(vw);
-    //    qDebug() << "variable " << index << "has changed name to " << newName;
 }
 
 void Widget::typeChanged(int newType)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
     int index = vwList->indexOf(vw);
-
-    QString type;
-    switch(newType)
-    {
-    case BYTTYPE:
-        type = "byte";
-        break;
-    case NUMTYPE:
-        type = "number";
-        break;
-    default:
-        type = "vector";
-        break;
-    }
-    qDebug() << "variable " << index << "has changed type to " << type;
 }
 
 
@@ -69,35 +58,30 @@ void Widget::lengthToggled(bool fixed)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
     int index = vwList->indexOf(vw);
-    qDebug() << "variable " << index << "has set fixed length to " << fixed;
 }
 
 void Widget::lengthChanged(int newLength)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
     int index = vwList->indexOf(vw);
-    qDebug() << "variable " << index << "has set the fixed length to" << newLength;
 }
 
 void Widget::matchToggled(bool matched)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
     int index = vwList->indexOf(vw);
-    qDebug() << "variable " << index << "has set match to " << matched;
 }
 
 void Widget::matchChanged(QString newMatch)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
     int index = vwList->indexOf(vw);
-    qDebug() << "variable " << index << "has set string to match to" << newMatch;
 }
 
 void Widget::repeatChanged(int newRepeat)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
     int index = vwList->indexOf(vw);
-    qDebug() << "variable " << index << "has set the vector repetitions to" << newRepeat;
 }
 
 void Widget::addVariable()
@@ -128,9 +112,11 @@ void Widget::addVariable()
     connect(vw,SIGNAL(matchToggle(bool)),this,SLOT(matchToggled(bool)));
     connect(vw,SIGNAL(matchChange(QString)),this,SLOT(matchChanged(QString)));
     connect(vw,SIGNAL(repeatChange(int)),this,SLOT(repeatChanged(int)));
-
     connect(vw,SIGNAL(sizeToggled(QSize)),this,SLOT(itemSize(QSize)));
     connect(vw,SIGNAL(deleteVar()),this,SLOT(remVariable()));
+    connect(vw,SIGNAL(variableChanged()),this,SLOT(variableListChanged()));
+    variableListChanged();
+
 }
 
 void Widget::remVariable()
@@ -143,18 +129,17 @@ void Widget::remVariable()
     lw->takeItem(row);
     vwList->removeAt(row);
     delete vw;
+    variableListChanged();
 }
 
 void Widget::itemSize(QSize newSize)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
     int row = vwList->indexOf(vw);
-    qDebug() << "row " << row << ", size: " << newSize.width() << " x " << newSize.height();
     QListWidgetItem *item = lw->item(row);
     item->setSizeHint(newSize);
 }
 
-//void Widget::resorted(QModelIndex sp,int ss,int se,QModelIndex dp,int dr, QPrivateSignal ps)
 void Widget::resorted(int src,int dest,QListWidgetItem* item)
 {
     VariableWidget *vw = static_cast<VariableWidget*>(lw->itemWidget(item));
@@ -162,39 +147,20 @@ void Widget::resorted(int src,int dest,QListWidgetItem* item)
     // Resort in list:
     vwList->insert(dest, vwList->takeAt(src));
     variableList->insert(dest,variableList->takeAt(src));
+    variableListChanged();
 }
 
 void Widget::itemRemoved(int row)
 {
-    // Print list:
-    for(int i=0;i<vwList->size();i++)
-    {
-        //        qDebug() << vwList->at(i)->getName();
-    }
     variableList->removeAt(row);
     delete vwList->at(row);
     vwList->removeAt(row);
-
-    for(int i=0;i<vwList->size();i++)
-    {
-        //        qDebug() << vwList->at(i)->getName();
-    }
-
-}
-
-void Widget::differentRow(int row)
-{
-    qDebug() << "diff row";
+    variableListChanged();
 }
 
 void Widget::itemSelected(QListWidgetItem *item)
 {
-    //    VariableWidget *vw = static_cast<VariableWidget*>(lw->itemWidget(item));
-    //    ui->lineEdit->setText(vw->getName());
 
-    //    // print line
-    //    int row = item->listWidget()->row(item);
-    //    qDebug() << "row: " << row;
 }
 
 void Widget::printList()
@@ -219,7 +185,37 @@ void Widget::printList()
             {
                 outString.append("\t");
                 outString.append(vecItem->name);
-                outString.append("|\n");
+                outString.append("| ");
+                // Type
+                if(vecItem->type==BYTTYPE)
+                {
+                    outString.append("byt, ");
+                }
+                else
+                {
+                    outString.append("num, ");
+                }
+                // Length
+                if(vecItem->fixed)
+                {
+                    outString.append("length: fix, ");
+                    outString.append(QString("len_val: %1, ").arg(vecItem->length));
+                }
+                else
+                {
+                    outString.append("length: var, ");
+                }
+                // Match
+                if(vecItem->match)
+                {
+                    outString.append("match: yes: , ");
+                    outString.append(vecItem->matchBytes);
+                }
+                else
+                {
+                    outString.append("match: no");
+                }
+                outString.append("\n");
             }
 
             break;

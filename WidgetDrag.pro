@@ -28,4 +28,5 @@ HEADERS  += widgetdrag.h \
 FORMS    += widgetdrag.ui
 
 OTHER_FILES += \
-    variablewidget.css
+    variablewidget.css \
+    mylistwidget.css

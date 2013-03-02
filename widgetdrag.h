@@ -20,7 +20,8 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
     QList<ComplexVariable*> *variableList;
-
+signals:
+    void updateVariableList();
 private:
     Ui::Widget *ui;
     QList<VariableWidget*> *vwList;
@@ -32,7 +33,6 @@ private slots:
     void resorted(int,int,QListWidgetItem*);
     void itemRemoved(int);
     void itemSelected(QListWidgetItem*);
-    void differentRow(int);
     void itemSize(QSize);
 
     // Variable data
@@ -44,6 +44,7 @@ private slots:
     void matchChanged(QString);
     void repeatChanged(int);
 
+    void variableListChanged();
     // Testing operation
     void printList();
 };

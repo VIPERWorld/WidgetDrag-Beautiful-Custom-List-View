@@ -70,6 +70,7 @@ signals:
     void matchChange(QString);
     void sizeToggled(QSize);
     void deleteVar();
+    void variableChanged();
 public slots:
     void setByte();
     void setNumber();

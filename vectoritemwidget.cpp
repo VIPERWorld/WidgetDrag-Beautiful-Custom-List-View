@@ -22,6 +22,7 @@ VectorItemWidget::VectorItemWidget(QWidget *parent) :
 void VectorItemWidget::changeName(QString newName)
 {
     variable->name = newName;
+    emit variableChanged();
     emit nameChange(newName);
 }
 
@@ -37,7 +38,7 @@ void VectorItemWidget::toggleType()
         setByte();
         break;
     }
-
+emit variableChanged();
     emit typeChange(currentType);
 }
 
@@ -83,12 +84,14 @@ void VectorItemWidget::toggleLength()
     }
     lengthButton->setIcon(lengthIcon);
     variable->fixed=fixed;
+    emit variableChanged();
     emit lengthToggle(fixed);
 }
 
 void VectorItemWidget::changeLength(int newLength)
 {
     variable->length = newLength;
+    emit variableChanged();
     emit lengthChange(newLength);
 }
 
@@ -107,6 +110,7 @@ void VectorItemWidget::toggleMatch()
     }
     matchButton->setIcon(matchIcon);
     variable->match = matched;
+    emit variableChanged();
     emit matchToggle(matched);
 }
 
@@ -129,6 +133,7 @@ void VectorItemWidget::toggleHex()
 void VectorItemWidget::changeMatch(QString newMatch)
 {
     variable->matchBytes = newMatch;
+    emit variableChanged();
     emit matchChange(newMatch);
 }
 
@@ -173,6 +178,7 @@ void VectorItemWidget::setupUi()
     lengthSpin = new QSpinBox;
     lengthSpin->setToolTip("Enter a fixed length");
     lengthSpin->setValue(1);
+    lengthSpin->setMinimum(1);
     lengthSpin->setFixedWidth(40);
     lengthSpin->setFixedHeight(24);
     matchButton = new QPushButton;

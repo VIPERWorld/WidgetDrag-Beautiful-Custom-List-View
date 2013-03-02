@@ -27,6 +27,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
 void VariableWidget::nameChanged(QString newName)
 {
     variable->name = newName;
+    emit variableChanged();
     emit nameChange(newName);
 }
 
@@ -44,6 +45,7 @@ void VariableWidget::toggleType()
         setByte();
         break;
     }
+    emit variableChanged();
     emit typeChange(variable->type);
 }
 
@@ -149,12 +151,14 @@ void VariableWidget::toggleLength()
     }
     lengthButton->setIcon(lengthIcon);
     variable->fixed=fixed;
+    emit variableChanged();
     emit lengthToggle(fixed);
 }
 
 void VariableWidget::changeLength(int newLength)
 {
     variable->length=newLength;
+    emit variableChanged();
     emit lengthChange(newLength);
 }
 
@@ -173,6 +177,7 @@ void VariableWidget::toggleMatch()
     }
     matchButton->setIcon(matchIcon);
     variable->match=matched;
+    emit variableChanged();
     emit matchToggle(matched);
 }
 
@@ -195,12 +200,14 @@ void VariableWidget::toggleHex()
 void VariableWidget::changeMatch(QString newMatch)
 {
     variable->matchBytes = newMatch;
+    emit variableChanged();
     emit matchChange(newMatch);
 }
 
 void VariableWidget::changeRepeat(int newRepeat)
 {
     variable->repeat=newRepeat;
+    emit variableChanged();
     emit repeatChange(newRepeat);
 }
 
@@ -271,6 +278,8 @@ void VariableWidget::addVectorByte()
     variable->vector->append(bv);
     connect(iw,SIGNAL(deleteVar()),this,SLOT(vectorItemRemoved()));
     connect(iw,SIGNAL(nameChange(QString)),this,SLOT(vectorItemNameChanged(QString)));
+    connect(iw,SIGNAL(variableChanged()),this,SIGNAL(variableChanged()));
+    emit variableChanged();
 }
 
 void VariableWidget::addVectorNumber()
@@ -284,6 +293,8 @@ void VariableWidget::addVectorNumber()
     variable->vector->append(iw->variable);
     connect(iw,SIGNAL(deleteVar()),this,SLOT(vectorItemRemoved()));
     connect(iw,SIGNAL(nameChange(QString)),this,SLOT(vectorItemNameChanged(QString)));
+    connect(iw,SIGNAL(variableChanged()),this,SIGNAL(variableChanged()));
+    emit variableChanged();
 }
 
 void VariableWidget::vectorItemResorted(int src,int dest,QListWidgetItem* item)
@@ -291,6 +302,7 @@ void VariableWidget::vectorItemResorted(int src,int dest,QListWidgetItem* item)
     // Resort in list:
     itemList->insert(dest,itemList->takeAt(src));
     variable->vector->insert(dest,variable->vector->takeAt(src));
+    emit variableChanged();
 }
 
 void VariableWidget::vectorItemRemoved()
@@ -315,6 +327,7 @@ void VariableWidget::vectorItemRemoved()
     itemList->removeAt(row);
     variable->vector->removeAt(row);
     delete op_sender;
+    emit variableChanged();
 }
 
 void VariableWidget::setupUI()

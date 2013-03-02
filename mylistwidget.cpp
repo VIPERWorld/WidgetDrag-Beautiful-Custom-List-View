@@ -8,12 +8,11 @@ MyListWidget::MyListWidget(QWidget *parent) :
     setDragDropMode(QAbstractItemView::InternalMove);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
-    QPalette pal = this->palette();
-    pal.setColor(QPalette::Base,QColor("black"));
+    QFile qss("../WidgetDrag/mylistwidget.css");
+    qss.open(QFile::ReadOnly);
+    setStyleSheet(qss.readAll());
+    qss.close();
 
-    this->setPalette(pal);
-    setStyleSheet("QListView::item:selected {background-color: rgb(20,20,20); border-style: solid; border-color: rgb(0,0,0);}"\
-                  "QListView::item:hover { background-color: rgb(50,50,50);}");
 }
 
 void MyListWidget::dropEvent(QDropEvent *event)

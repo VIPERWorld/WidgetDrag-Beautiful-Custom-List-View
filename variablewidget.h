@@ -91,7 +91,7 @@ signals:
     void matchChange(QString);
     void repeatChange(int);
     void vectorChanged();
-//    void propertyChange();
+    void variableChanged();
 
     void sizeToggled(QSize);
     void deleteVar();
