@@ -6,7 +6,7 @@
 #include <QList>
 #include <QModelIndexList>
 #include <QListWidgetItem>
-#include "mylistwidget.h"
+#include "livelistwidget.h"
 
 namespace Ui {
 class Widget;
@@ -25,24 +25,23 @@ signals:
 private:
     Ui::Widget *ui;
     QList<VariableWidget*> *vwList;
-    MyListWidget *lw;
+    LiveListWidget *lw;
 private slots:
     // Widget handling
     void addVariable();
     void remVariable();
     void resorted(int,int,QListWidgetItem*);
     void itemRemoved(int);
-    void itemSelected(QListWidgetItem*);
     void itemSize(QSize);
 
     // Variable data
-    void nameChanged(QString);
-    void typeChanged(int);
-    void lengthToggled(bool);
-    void lengthChanged(int);
-    void matchToggled(bool);
-    void matchChanged(QString);
-    void repeatChanged(int);
+//    void nameChanged(QString);
+//    void typeChanged(int);
+//    void lengthToggled(bool);
+//    void lengthChanged(int);
+//    void matchToggled(bool);
+//    void matchChanged(QString);
+//    void repeatChanged(int);
 
     void variableListChanged();
     // Testing operation

@@ -11,7 +11,7 @@ Widget::Widget(QWidget *parent) :
 
     vwList = new QList<VariableWidget*>;
     variableList = new QList<ComplexVariable*>;
-    lw = new MyListWidget(this);
+    lw = new LiveListWidget(this);
     ui->verticalLayout->addWidget(lw);
 
     for(quint8 i =0;i<1;i++)
@@ -24,7 +24,6 @@ Widget::Widget(QWidget *parent) :
     connect(ui->addVectorButton,SIGNAL(clicked()),this,SLOT(addVariable()));
     connect(lw,SIGNAL(itemMoved(int,int,QListWidgetItem*)),this,SLOT(resorted(int,int,QListWidgetItem*)));
     connect(lw,SIGNAL(itemRemoved(int)),this,SLOT(itemRemoved(int)));
-    connect(lw,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(itemSelected(QListWidgetItem*)));
     connect(ui->printListButton,SIGNAL(clicked()),this,SLOT(printList()));
 
 }
@@ -40,49 +39,6 @@ void Widget::variableListChanged()
     emit updateVariableList();
 }
 
-
-void Widget::nameChanged(QString newName)
-{
-    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
-    int index = vwList->indexOf(vw);
-}
-
-void Widget::typeChanged(int newType)
-{
-    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
-    int index = vwList->indexOf(vw);
-}
-
-
-void Widget::lengthToggled(bool fixed)
-{
-    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
-    int index = vwList->indexOf(vw);
-}
-
-void Widget::lengthChanged(int newLength)
-{
-    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
-    int index = vwList->indexOf(vw);
-}
-
-void Widget::matchToggled(bool matched)
-{
-    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
-    int index = vwList->indexOf(vw);
-}
-
-void Widget::matchChanged(QString newMatch)
-{
-    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
-    int index = vwList->indexOf(vw);
-}
-
-void Widget::repeatChanged(int newRepeat)
-{
-    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
-    int index = vwList->indexOf(vw);
-}
 
 void Widget::addVariable()
 {
@@ -105,13 +61,13 @@ void Widget::addVariable()
     item->setSizeHint(vw->sizeHint());
     lw->setItemWidget(item,vw);
 
-    connect(vw,SIGNAL(nameChange(QString)),this,SLOT(nameChanged(QString)));
-    connect(vw,SIGNAL(typeChange(int)),this,SLOT(typeChanged(int)));
-    connect(vw,SIGNAL(lengthToggle(bool)),this,SLOT(lengthToggled(bool)));
-    connect(vw,SIGNAL(lengthChange(int)),this,SLOT(lengthChanged(int)));
-    connect(vw,SIGNAL(matchToggle(bool)),this,SLOT(matchToggled(bool)));
-    connect(vw,SIGNAL(matchChange(QString)),this,SLOT(matchChanged(QString)));
-    connect(vw,SIGNAL(repeatChange(int)),this,SLOT(repeatChanged(int)));
+//    connect(vw,SIGNAL(nameChange(QString)),this,SLOT(nameChanged(QString)));
+//    connect(vw,SIGNAL(typeChange(int)),this,SLOT(typeChanged(int)));
+//    connect(vw,SIGNAL(lengthToggle(bool)),this,SLOT(lengthToggled(bool)));
+//    connect(vw,SIGNAL(lengthChange(int)),this,SLOT(lengthChanged(int)));
+//    connect(vw,SIGNAL(matchToggle(bool)),this,SLOT(matchToggled(bool)));
+//    connect(vw,SIGNAL(matchChange(QString)),this,SLOT(matchChanged(QString)));
+//    connect(vw,SIGNAL(repeatChange(int)),this,SLOT(repeatChanged(int)));
     connect(vw,SIGNAL(sizeToggled(QSize)),this,SLOT(itemSize(QSize)));
     connect(vw,SIGNAL(deleteVar()),this,SLOT(remVariable()));
     connect(vw,SIGNAL(variableChanged()),this,SLOT(variableListChanged()));
@@ -156,11 +112,6 @@ void Widget::itemRemoved(int row)
     delete vwList->at(row);
     vwList->removeAt(row);
     variableListChanged();
-}
-
-void Widget::itemSelected(QListWidgetItem *item)
-{
-
 }
 
 void Widget::printList()
@@ -246,3 +197,47 @@ void Widget::printList()
     }
     qDebug() << "===";
 }
+
+
+//void Widget::nameChanged(QString newName)
+//{
+//    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+//    int index = vwList->indexOf(vw);
+//}
+
+//void Widget::typeChanged(int newType)
+//{
+//    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+//    int index = vwList->indexOf(vw);
+//}
+
+
+//void Widget::lengthToggled(bool fixed)
+//{
+//    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+//    int index = vwList->indexOf(vw);
+//}
+
+//void Widget::lengthChanged(int newLength)
+//{
+//    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+//    int index = vwList->indexOf(vw);
+//}
+
+//void Widget::matchToggled(bool matched)
+//{
+//    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+//    int index = vwList->indexOf(vw);
+//}
+
+//void Widget::matchChanged(QString newMatch)
+//{
+//    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+//    int index = vwList->indexOf(vw);
+//}
+
+//void Widget::repeatChanged(int newRepeat)
+//{
+//    VariableWidget *vw = static_cast<VariableWidget*>(QObject::sender());
+//    int index = vwList->indexOf(vw);
+//}

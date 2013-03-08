@@ -15,15 +15,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         widgetdrag.cpp \
     variablewidget.cpp \
-    mylistwidget.cpp \
     parserengine.cpp \
-    vectoritemwidget.cpp
+    vectoritemwidget.cpp \
+    livelistwidget.cpp
 
 HEADERS  += widgetdrag.h \
     variablewidget.h \
-    mylistwidget.h \
     parserengine.h \
-    vectoritemwidget.h
+    vectoritemwidget.h \
+    livelistwidget.h
 
 FORMS    += widgetdrag.ui
 

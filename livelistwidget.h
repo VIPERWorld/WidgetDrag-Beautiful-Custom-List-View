@@ -1,14 +1,14 @@
-#ifndef MYLISTWIDGET_H
-#define MYLISTWIDGET_H
+#ifndef LIVELISTWIDGET_H
+#define LIVELISTWIDGET_H
 
 #include <QListWidget>
 #include <QKeyEvent>
 
-class MyListWidget : public QListWidget
+class LiveListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit MyListWidget(QWidget *parent = 0);
+    explicit LiveListWidget(QWidget *parent = 0);
     
 signals:
     void itemMoved(int,int,QListWidgetItem*);
@@ -26,4 +26,4 @@ protected:
 
 };
 
-#endif // MYLISTWIDGET_H
+#endif // LIVELISTWIDGET_H

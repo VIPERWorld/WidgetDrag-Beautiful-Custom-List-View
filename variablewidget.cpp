@@ -21,6 +21,7 @@ VariableWidget::VariableWidget(QWidget *parent) :
     variable->vector = new QList<BaseVariable*>;
     itemList = new QList<VectorItemWidget*>;
 
+    hexRegex.setPattern(QString("([A-Fa-f0-9]{2}( )?)+"));
     setupUI();
 }
 
@@ -189,16 +190,22 @@ void VariableWidget::toggleHex()
     if(hexed)
     {
         hexIcon=hexonIconPixmap;
+        matchEdit->setText(char2hex(matchEdit->text()));
     }
     else
     {
         hexIcon=hexoffIconPixmap;
+        matchEdit->setText(hex2char(matchEdit->text()));
     }
     hexButton->setIcon(hexIcon);
 }
 
 void VariableWidget::changeMatch(QString newMatch)
 {
+    if(hexed)
+    {
+        newMatch = hex2char(newMatch);
+    }
     variable->matchBytes = newMatch;
     emit variableChanged();
     emit matchChange(newMatch);
@@ -330,6 +337,43 @@ void VariableWidget::vectorItemRemoved()
     emit variableChanged();
 }
 
+QString VariableWidget::char2hex(QString characters)
+{
+    QString hexChars;
+    // Switch all characters to hex (00-ff) representation
+    while(characters.size()>0)
+    {
+        QByteArray temparray;
+        temparray.append(characters.left(1));
+        hexChars.append(temparray.toHex().toUpper());
+        hexChars.append(" ");
+        characters.remove(0,1);
+    }
+    return hexChars;
+}
+
+QString VariableWidget::hex2char(QString hexChars)
+{
+    // Change all hex data back to ascii representation
+    QByteArray characters;
+    hexRegex.indexIn(hexChars);
+    QString temp = hexRegex.cap();
+
+    while(temp.size()>0)
+    {
+        QByteArray temparray;
+        temparray.append(temp.left(2));
+        characters.append(QByteArray::fromHex(temparray));
+        temp.remove(0,2);
+        if(temp.size()>0 && temp.at(0)==' ')
+        {
+            temp.remove(0,1);
+        }
+    }
+    return characters;
+}
+
+
 void VariableWidget::setupUI()
 {
     byteIconPixmap = QPixmap("../WidgetDrag/byte_icon.png");
@@ -451,7 +495,7 @@ void VariableWidget::setupUI()
     titleLayout->addWidget(delButton);
     titleLayout->setMargin(0);
 
-    vectorItemList = new MyListWidget(this);
+    vectorItemList = new LiveListWidget(this);
     vectorItemList->setVisible(false);
     vectorItemList->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);
 

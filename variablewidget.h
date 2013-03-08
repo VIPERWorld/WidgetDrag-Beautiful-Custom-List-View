@@ -13,7 +13,7 @@
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QDebug>
-#include "mylistwidget.h"
+#include "livelistwidget.h"
 #include "vectoritemwidget.h"
 #include "parserengine.h"
 
@@ -48,7 +48,7 @@ private:
     QPushButton *addByteButton;
     QPushButton *addNumberButton;
 
-    MyListWidget *vectorItemList;
+    LiveListWidget *vectorItemList;
     QHBoxLayout *vectorListLayout;
 
     // Assets
@@ -77,6 +77,9 @@ private:
     QList<VectorItemWidget*> *itemList;
 
     void setupUI();
+    QString char2hex(QString characters);
+    QString hex2char(QString hexChars);
+    QRegExp hexRegex;
 
 public:
     explicit VariableWidget(QWidget *parent = 0);

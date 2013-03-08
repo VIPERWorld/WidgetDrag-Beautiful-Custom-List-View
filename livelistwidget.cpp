@@ -1,6 +1,6 @@
-#include "mylistwidget.h"
+#include "livelistwidget.h"
 
-MyListWidget::MyListWidget(QWidget *parent) :
+LiveListWidget::LiveListWidget(QWidget *parent) :
     QListWidget(parent)
 {
     setAcceptDrops(true);
@@ -15,20 +15,20 @@ MyListWidget::MyListWidget(QWidget *parent) :
 
 }
 
-void MyListWidget::dropEvent(QDropEvent *event)
+void LiveListWidget::dropEvent(QDropEvent *event)
 {
     QListWidget::dropEvent(event);
     emit itemMoved(drag_row,this->row(temp_item),temp_item);
 }
 
-void MyListWidget::startDrag(Qt::DropActions supportedActions)
+void LiveListWidget::startDrag(Qt::DropActions supportedActions)
 {
     temp_item  = currentItem();
     drag_row= this->row(temp_item);
     QListWidget::startDrag(supportedActions);
 }
 
-void MyListWidget::keyPressEvent(QKeyEvent *event)
+void LiveListWidget::keyPressEvent(QKeyEvent *event)
 {
     temp_item = currentItem();
     if(event->key()==Qt::Key_Delete)
