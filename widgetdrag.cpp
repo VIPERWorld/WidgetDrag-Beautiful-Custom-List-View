@@ -1,36 +1,95 @@
 #include "widgetdrag.h"
-#include "ui_widgetdrag.h"
 #include <QDebug>
 #include <QDir>
 
 Widget::Widget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Widget)
+    QWidget(parent)
 {
-    ui->setupUi(this);
+// Assets
+    addByteIconPixmap = QPixmap("../WidgetDrag/addbyte_icon.png");
+    addNumberIconPixmap = QPixmap("../WidgetDrag/addnumber_icon.png");
+    addVectorIconPixmap = QPixmap("../WidgetDrag/addvector_icon.png");
+    moreIconPixmap = QPixmap("../WidgetDrag/more_icon.png");
+    lessIconPixmap = QPixmap("../WidgetDrag/less_icon.png");
+
+    expanded=true;
+
+    nameEdit = new QLineEdit("Parser 001");
+    nameEdit->setFixedHeight(24);
+    addByteButton = new QPushButton;
+    addByteButton->setFixedHeight(24);
+    addByteButton->setFixedWidth(24);
+    addByteButton->setIcon(QIcon(addByteIconPixmap));
+    addNumberButton = new QPushButton;
+    addNumberButton->setFixedHeight(24);
+    addNumberButton->setFixedWidth(24);
+    addNumberButton->setIcon(QIcon(addNumberIconPixmap));
+    addVectorButton = new QPushButton;
+    addVectorButton->setFixedHeight(24);
+    addVectorButton->setFixedWidth(24);
+    addVectorButton->setIcon(QIcon(addVectorIconPixmap));
+    expandButton = new QPushButton;
+    expandButton->setFixedSize(24,24);
+    expandButton->setIcon(QIcon(moreIconPixmap));
 
     vwList = new QList<VariableWidget*>;
     variableList = new QList<ComplexVariable*>;
     lw = new LiveListWidget(this);
-    ui->verticalLayout->addWidget(lw);
 
     for(quint8 i =0;i<1;i++)
     {
         addVariable();
 
     }
-    connect(ui->addByteButton,SIGNAL(clicked()),this,SLOT(addVariable()));
-    connect(ui->addNumberButton,SIGNAL(clicked()),this,SLOT(addVariable()));
-    connect(ui->addVectorButton,SIGNAL(clicked()),this,SLOT(addVariable()));
+
+    controlLayout = new QHBoxLayout;
+controlLayout->addWidget(nameEdit);
+    controlLayout->addWidget(addByteButton);
+    controlLayout->addWidget(addNumberButton);
+    controlLayout->addWidget(addVectorButton);
+    controlLayout->addWidget(expandButton);
+
+    mainLayout = new QVBoxLayout;
+    mainLayout->addLayout(controlLayout);
+    mainLayout->addWidget(lw);
+    setLayout(mainLayout);
+    setMinimumWidth(500);
+
+    connect(addByteButton,SIGNAL(clicked()),this,SLOT(addVariable()));
+    connect(addNumberButton,SIGNAL(clicked()),this,SLOT(addVariable()));
+    connect(addVectorButton,SIGNAL(clicked()),this,SLOT(addVariable()));
+    connect(expandButton,SIGNAL(clicked()),this,SLOT(toggleExpand()));
     connect(lw,SIGNAL(itemMoved(int,int,QListWidgetItem*)),this,SLOT(resorted(int,int,QListWidgetItem*)));
     connect(lw,SIGNAL(itemRemoved(int)),this,SLOT(itemRemoved(int)));
-    connect(ui->printListButton,SIGNAL(clicked()),this,SLOT(printList()));
+//    connect(ui->printListButton,SIGNAL(clicked()),this,SLOT(printList()));
+
+    // Styling
+    QFile qss("../WidgetDrag/widgetdrag.css");
+    qss.open(QFile::ReadOnly);
+    setStyleSheet(qss.readAll());
+    qss.close();
 
 }
 
 Widget::~Widget()
 {
-    delete ui;
+//    delete ui;
+}
+
+void Widget::toggleExpand()
+{
+    expanded=!expanded;
+    if(expanded)
+    {
+        lw->setVisible(true);
+        expandButton->setIcon(QIcon(moreIconPixmap));
+    }
+    else
+    {
+        lw->setVisible(false);
+        expandButton->setIcon(QIcon(lessIconPixmap));
+    }
+    emit changeSize(this->sizeHint());
 }
 
 void Widget::variableListChanged()
@@ -44,11 +103,11 @@ void Widget::addVariable()
 {
     QPushButton *senderButton = static_cast<QPushButton*>(QObject::sender());
     VariableWidget *vw = new VariableWidget(lw);
-    if(senderButton==ui->addNumberButton)
+    if(senderButton==addNumberButton)
     {
         vw->setNumber();
     }
-    else if(senderButton==ui->addVectorButton)
+    else if(senderButton==addVectorButton)
     {
         vw->setVector();
     }
@@ -160,7 +219,7 @@ void Widget::printList()
                 if(vecItem->match)
                 {
                     outString.append("match: yes: , ");
-                    outString.append(vecItem->matchBytes);
+                    outString.append(vecItem->matchBytes.toHex());
                 }
                 else
                 {
@@ -186,7 +245,7 @@ void Widget::printList()
             if(item->match)
             {
                 outString.append("match: yes: ");
-                outString.append(item->matchBytes);
+                outString.append(item->matchBytes.toHex());
             }
             else
             {

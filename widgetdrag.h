@@ -8,10 +8,6 @@
 #include <QListWidgetItem>
 #include "livelistwidget.h"
 
-namespace Ui {
-class Widget;
-}
-
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -22,10 +18,28 @@ public:
     QList<ComplexVariable*> *variableList;
 signals:
     void updateVariableList();
+    void changeSize(QSize);
 private:
-    Ui::Widget *ui;
+    QHBoxLayout *controlLayout;
+    QVBoxLayout *mainLayout;
+
+    QLineEdit *nameEdit;
+    QPushButton *addByteButton;
+    QPushButton *addNumberButton;
+    QPushButton *addVectorButton;
+    QPushButton *expandButton;
+
     QList<VariableWidget*> *vwList;
     LiveListWidget *lw;
+
+    bool expanded;
+
+    // Assets
+   QPixmap addByteIconPixmap;
+   QPixmap addNumberIconPixmap;
+   QPixmap addVectorIconPixmap;
+   QPixmap moreIconPixmap;
+   QPixmap lessIconPixmap;
 private slots:
     // Widget handling
     void addVariable();
@@ -33,6 +47,7 @@ private slots:
     void resorted(int,int,QListWidgetItem*);
     void itemRemoved(int);
     void itemSize(QSize);
+    void toggleExpand();
 
     // Variable data
 //    void nameChanged(QString);

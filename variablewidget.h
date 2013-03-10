@@ -91,7 +91,7 @@ signals:
     void lengthToggle(bool);
     void lengthChange(int);
     void matchToggle(bool);
-    void matchChange(QString);
+    void matchChange(QByteArray);
     void repeatChange(int);
     void vectorChanged();
     void variableChanged();

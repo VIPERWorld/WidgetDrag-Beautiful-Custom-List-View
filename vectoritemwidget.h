@@ -54,7 +54,10 @@ private:
     bool matched;
     bool fixed;
     bool hexed;
+    QRegExp hexRegex;
 
+    QString char2hex(QString characters);
+    QString hex2char(QString hexChars);
     void setupUi();
 
 public:
@@ -67,7 +70,7 @@ signals:
     void lengthToggle(bool);
     void lengthChange(int);
     void matchToggle(bool);
-    void matchChange(QString);
+    void matchChange(QByteArray);
     void sizeToggled(QSize);
     void deleteVar();
     void variableChanged();

@@ -10,7 +10,7 @@ public:
     bool fixed;
     bool match;
     quint8 length;
-    QString matchBytes;
+    QByteArray matchBytes;
 };
 
 class ComplexVariable{
@@ -20,7 +20,7 @@ public:
     bool fixed;
     bool match;
     quint8 length;
-    QString matchBytes;
+    QByteArray matchBytes;
     quint8 repeat;
     QList<BaseVariable*> *vector;
 };
@@ -34,7 +34,7 @@ public:
     bool match;
     quint8 length;
     quint8 repeat;
-    QString matchBytes;
+    QByteArray matchBytes;
     QList<QByteArray> received;
     QList<double> numValue;
 };

@@ -202,13 +202,32 @@ void VariableWidget::toggleHex()
 
 void VariableWidget::changeMatch(QString newMatch)
 {
+    QByteArray characters;
+    variable->matchBytes.clear();
+
     if(hexed)
     {
-        newMatch = hex2char(newMatch);
+        // Change all hex data back to ascii representation
+
+        hexRegex.indexIn(newMatch);
+        QString temp = hexRegex.cap();
+
+        // Remove all spaces from string
+        temp=temp.simplified();
+        temp = temp.replace(' ',"");
+
+        // Use a QByteArray to convert
+        characters.append(temp);
+        characters = QByteArray::fromHex(characters);
+
     }
-    variable->matchBytes = newMatch;
+    else
+    {
+        characters.append(newMatch);
+    }
+    variable->matchBytes.append(characters);
     emit variableChanged();
-    emit matchChange(newMatch);
+    emit matchChange(characters);
 }
 
 void VariableWidget::changeRepeat(int newRepeat)
@@ -346,7 +365,10 @@ QString VariableWidget::char2hex(QString characters)
         QByteArray temparray;
         temparray.append(characters.left(1));
         hexChars.append(temparray.toHex().toUpper());
-        hexChars.append(" ");
+        if(characters.size()>1)
+        {
+            hexChars.append(" ");
+        }
         characters.remove(0,1);
     }
     return hexChars;
@@ -359,17 +381,14 @@ QString VariableWidget::hex2char(QString hexChars)
     hexRegex.indexIn(hexChars);
     QString temp = hexRegex.cap();
 
-    while(temp.size()>0)
-    {
-        QByteArray temparray;
-        temparray.append(temp.left(2));
-        characters.append(QByteArray::fromHex(temparray));
-        temp.remove(0,2);
-        if(temp.size()>0 && temp.at(0)==' ')
-        {
-            temp.remove(0,1);
-        }
-    }
+    // Remove all spaces from string
+    temp=temp.simplified();
+    temp = temp.replace(' ',"");
+
+    // Use a QByteArray to convert
+    characters.append(temp);
+    characters = QByteArray::fromHex(characters);
+
     return characters;
 }
 
@@ -458,17 +477,19 @@ void VariableWidget::setupUI()
     repeatSpin->setFixedWidth(40);
     repeatSpin->setFixedHeight(24);
     addByteButton = new QPushButton;
+    addByteButton->setToolTip("Add byte variable");
     addByteButton->setIcon(addbyteIcon);
     addByteButton->setFixedSize(24,24);
     addByteButton->setVisible(false);
     addNumberButton = new QPushButton;
+    addNumberButton->setToolTip("Add number variable");
     addNumberButton->setIcon(addnumberIcon);
     addNumberButton->setFixedSize(24,24);
     addNumberButton->setVisible(false);
 
     // Expand / Delete Buttons
     moreButton = new QPushButton;
-
+    moreButton->setToolTip("Show or hide variable details");
     moreButton->setFixedWidth(24);
     moreButton->setFixedHeight(24);
     moreButton->setIcon(moreIcon);

@@ -9,6 +9,7 @@ VectorItemWidget::VectorItemWidget(QWidget *parent) :
     hexed=false;
 
     setupUi();
+    hexRegex.setPattern(QString("([A-Fa-f0-9]{2}( )?)+"));
 
     variable = new BaseVariable;
     variable->name = "variable";
@@ -122,19 +123,81 @@ void VectorItemWidget::toggleHex()
     if(hexed)
     {
         hexIcon=hexonIconPixmap;
+        matchEdit->setText(char2hex(matchEdit->text()));
     }
     else
     {
         hexIcon=hexoffIconPixmap;
+        matchEdit->setText(hex2char(matchEdit->text()));
     }
     hexButton->setIcon(hexIcon);
 }
 
+QString VectorItemWidget::char2hex(QString characters)
+{
+    QString hexChars;
+    // Switch all characters to hex (00-ff) representation
+    while(characters.size()>0)
+    {
+        QByteArray temparray;
+        temparray.append(characters.left(1));
+        hexChars.append(temparray.toHex().toUpper());
+        if(characters.size()>1)
+        {
+            hexChars.append(" ");
+        }
+        characters.remove(0,1);
+    }
+    return hexChars;
+}
+
+QString VectorItemWidget::hex2char(QString hexChars)
+{
+    // Change all hex data back to ascii representation
+    QByteArray characters;
+    hexRegex.indexIn(hexChars);
+    QString temp = hexRegex.cap();
+
+    // Remove all spaces from string
+    temp=temp.simplified();
+    temp = temp.replace(' ',"");
+
+    // Use a QByteArray to convert
+    characters.append(temp);
+    characters = QByteArray::fromHex(characters);
+
+    return characters;
+}
+
+
 void VectorItemWidget::changeMatch(QString newMatch)
 {
-    variable->matchBytes = newMatch;
+    QByteArray characters;
+    variable->matchBytes.clear();
+
+    if(hexed)
+    {
+        // Change all hex data back to ascii representation
+
+        hexRegex.indexIn(newMatch);
+        QString temp = hexRegex.cap();
+
+        // Remove all spaces from string
+        temp=temp.simplified();
+        temp = temp.replace(' ',"");
+
+        // Use a QByteArray to convert
+        characters.append(temp);
+        characters = QByteArray::fromHex(characters);
+
+    }
+    else
+    {
+        characters.append(newMatch);
+    }
+    variable->matchBytes.append(characters);
     emit variableChanged();
-    emit matchChange(newMatch);
+    emit matchChange(characters);
 }
 
 void VectorItemWidget::setupUi()

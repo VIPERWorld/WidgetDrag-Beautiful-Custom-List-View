@@ -25,8 +25,9 @@ HEADERS  += widgetdrag.h \
     vectoritemwidget.h \
     livelistwidget.h
 
-FORMS    += widgetdrag.ui
+FORMS    +=
 
 OTHER_FILES += \
     variablewidget.css \
-    mylistwidget.css
+    mylistwidget.css \
+    widgetdrag.css
