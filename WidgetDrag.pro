@@ -29,5 +29,5 @@ FORMS    +=
 
 OTHER_FILES += \
     variablewidget.css \
-    mylistwidget.css \
-    widgetdrag.css
+    widgetdrag.css \
+    livelistwidget.css

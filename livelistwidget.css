@@ -1,0 +1,56 @@
+QListView {
+background-color: "black";
+}
+
+QListView::item:selected {
+background-color: rgb(20,20,20);
+border-style: solid;
+border-color: rgb(0,0,0);
+}
+
+QListView::item:hover {
+background-color: rgb(50,50,50);
+}
+
+ QScrollBar:vertical {
+ border: 1px solid rgb(100,100,100);
+ background: black;
+ width: 20px;
+ margin: 22px 0 22px 0;
+ }
+ QScrollBar::handle:vertical {
+ background: rgb(100,100,100);
+ min-height: 20px;
+ }
+ QScrollBar::add-line:vertical {
+ border: 2px solid rgb(100,100,100);
+ background: black;
+ height: 20px;
+ subcontrol-position: bottom;
+ subcontrol-origin: margin;
+ border-radius: 4px;
+ border-top-left-radius: none;
+ border-top-right-radius: none;
+ }
+
+  QScrollBar::sub-line:vertical {
+  border: 2px solid rgb(100,100,100);
+  background: black;
+  height: 20px;
+  subcontrol-position: top;
+  subcontrol-origin: margin;
+  border-radius: 4px;
+  border-radius: 4px;
+  border-bottom-left-radius: none;
+  border-bottom-right-radius: none;
+  }
+  QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+  border: none;
+  width: 5px;
+  height: 5px;
+  background: rgb(200,200,200);
+  }
+
+  QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+  background: none;
+  }

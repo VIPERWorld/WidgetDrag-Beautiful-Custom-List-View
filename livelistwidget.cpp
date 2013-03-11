@@ -8,7 +8,9 @@ LiveListWidget::LiveListWidget(QWidget *parent) :
     setDragDropMode(QAbstractItemView::InternalMove);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
-    QFile qss("../WidgetDrag/mylistwidget.css");
+    setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
+    QFile qss("../WidgetDrag/livelistwidget.css");
     qss.open(QFile::ReadOnly);
     setStyleSheet(qss.readAll());
     qss.close();
